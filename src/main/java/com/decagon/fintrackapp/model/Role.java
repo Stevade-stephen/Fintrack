@@ -18,5 +18,5 @@ public class Role extends BaseModel{
     private Approval approval;
 
     @ManyToMany
-    List<Transaction>transactions;
+    private List<Transaction>transactions;
 }
