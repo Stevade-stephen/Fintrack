@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @MappedSuperclass
-public class BaseModel {
+public class BaseModel extends Auditable <User> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,36 +24,4 @@ public class BaseModel {
 
     @Size(max = 255)
     String slug;
-
-
-    @CreationTimestamp
-    @Column(name = ("created_at"))
-    private LocalDateTime createdAt;
-
-
-    @UpdateTimestamp
-    @Column(name = ("updated_at"))
-    private LocalDateTime updatedAt;
-
-    @Column(name = ("deleted_at"))
-    private LocalDateTime deletedAt;
-
-    /**
-     * bellow are FKs to the user table
-     */
-    @NotNull
-    @Column(name = ("created_by"))
-
-    private User createdBy;
-
-    @NotNull
-    @Column(name = ("updated_by"))
-    private Long updatedBy;
-
-    @Nullable
-    @Column(name = ("deleted_by"))
-    private Long deletedBy;
-
-//Hello
-
 }

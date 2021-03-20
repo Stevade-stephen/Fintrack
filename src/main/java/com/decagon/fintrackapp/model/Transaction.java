@@ -31,11 +31,10 @@ public class Transaction extends BaseModel{
     @Enumerated(EnumType.STRING)
     private ETransactionStatus status;
 
-    /**
-     * FK to the Transaction Category table and Transaction Type
-     * ETransactionStatus is an enum
-     */
-    private Long TransactionCategoryId;
-    private Long TransactionTypeId;
+
+    @ManyToOne
+    private TransactionCategory transactionCategory;
+    @ManyToOne
+    private TransactionType TransactionType;
 
 }

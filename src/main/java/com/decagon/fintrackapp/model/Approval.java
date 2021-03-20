@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Getter
@@ -13,11 +15,11 @@ import javax.persistence.Table;
 public class Approval extends BaseModel{
     private String status;
 
-    /**
-     * FKs from
-     * ETransactionStatus is an enum
-     */
+
+    @OneToOne
     private Transaction transaction;
+    @ManyToOne
     private User user;
-    private ERole ERole;
+    @OneToOne
+    private Role role;
 }
