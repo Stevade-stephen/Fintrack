@@ -1,0 +1,39 @@
+server:
+  port: 8081
+  forward-headers-strategy: native
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
+    sql: trace
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          azure-ad:
+            authorization-uri: https://login.microsoftonline.com/364cc942-1cec-4791-b264-cde4a0a816f6/oauth2/v2.0/authorize
+            token-uri: https://login.microsoftonline.com/364cc942-1cec-4791-b264-cde4a0a816f6/oauth2/v2.0/token
+            jwk-set-uri: https://login.microsoftonline.com/364cc942-1cec-4791-b264-cde4a0a816f6/discovery/v2.0/keys
+        registration:
+          azure-client:
+            provider: azure-ad
+            client-id: 941eab4a-1e81-43f2-8305-b5cf3dc74f10
+            #            client-id: e79668a1-eecc-4cdb-9867-91d63dc60626
+            client-secret: 4dFH6.DGY.tg7OwKQ9JS~D5CxJs-L~mc43
+            #            client-secret: _INc6RrN4SEavald_tnSNGyi4~P.~7w5Y5
+            authorization-grant-type: authorization_code
+            redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
+            scope: openid, profile
+  datasource:
+    url: jdbc:mysql://localhost:3306/fintrack?serverTimezone=UTC
+    username: root
+    password: enoch@1992
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: update
+#    // http://localhost:8081/login/oauth2/code/azure-client

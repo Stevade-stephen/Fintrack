@@ -1,6 +1,6 @@
 package com.decagon.fintrackapp.model;
 
-public enum ETransactionStatus {
+public enum EStatus {
     PENDING,
     DISBURSED,
     CLOSED

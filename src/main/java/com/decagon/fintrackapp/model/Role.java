@@ -11,12 +11,22 @@ import java.util.List;
 @Setter
 @Entity
 public class Role extends BaseModel{
+
+
     @Enumerated(EnumType.STRING)
     private ERole appUserRole;
+
+    public Role(ERole appUserRole) {
+        this.appUserRole = appUserRole;
+    }
+    public Role() {
+    }
 
     @OneToOne
     private Approval approval;
 
     @ManyToMany
     private List<Transaction>transactions;
+
+
 }

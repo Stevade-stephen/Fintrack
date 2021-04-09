@@ -29,12 +29,24 @@ public class Transaction extends BaseModel{
     private Instant closedAt;
 
     @Enumerated(EnumType.STRING)
-    private ETransactionStatus status;
+    private EStatus status;
+
+    @Enumerated(EnumType.STRING)
+    private ECategory category;
 
 
-    @ManyToOne
-    private TransactionCategory transactionCategory;
     @ManyToOne
     private TransactionType TransactionType;
 
+
+    public Transaction(@NotBlank String title, @NotBlank String description, @NotBlank String amount,
+                       @NotBlank String receiptUrls, ECategory category) {
+        this.title = title;
+        this.description = description;
+        this.amount = amount;
+        this.receiptUrls = receiptUrls;
+    }
+
+    public Transaction() {
+    }
 }

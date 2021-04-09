@@ -8,9 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
@@ -22,6 +20,9 @@ public class User extends BaseModel{
     private String email;
     private String password;
 
+    public User() {
+    }
+
     /**
      * FK to the department table
      */
@@ -29,7 +30,7 @@ public class User extends BaseModel{
     @ManyToOne
     private Department department;
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<Role> roles = new ArrayList<>();
+    private Set<Role> roles = new HashSet<>();
     @OneToMany
     private  List<Approval> approvals;
 }
