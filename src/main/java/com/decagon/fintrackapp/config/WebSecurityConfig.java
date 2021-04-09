@@ -64,9 +64,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .anyRequest().authenticated()
                     .and()
                     .oauth2Login()
-                    .defaultSuccessUrl("/home").and()
-                    .exceptionHandling().and().sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                    .defaultSuccessUrl("/home");
+            http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         }
 
     @Override

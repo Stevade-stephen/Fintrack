@@ -1,6 +1,7 @@
 package com.decagon.fintrackapp.config;
 
 
+import com.decagon.fintrackapp.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -37,9 +38,9 @@ public class JwtTokenProvider {
             return extractExpiration(token).before(new Date());
         }
 
-        public String generateToken(UserDetails userDetails) {
+        public String generateToken(User userDetails) {
             Map<String, Object> claims = new HashMap<>();
-            return createToken(claims, userDetails.getUsername());
+            return createToken(claims, userDetails.getName());
         }
 
         private String createToken(Map<String, Object> claims, String subject) {

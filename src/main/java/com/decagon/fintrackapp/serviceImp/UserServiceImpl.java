@@ -44,4 +44,20 @@ public class UserServiceImpl {
     public void addUser(User user) {
         userRepository.save(user);
     }
+
+
+    public ResponseEntity<?> removeUserRole(Set<Long> roleId, Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if(user.isEmpty()) throw new AppException("User does not exist");
+        Set<Role> role = roleId.stream()
+                .map(id ->roleRepository.findById(id).get()).collect(Collectors.toSet());
+        user.get().getRoles().removeAll(role);
+        userRepository.save(user.get());
+        URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/users/{username}")
+                .buildAndExpand(user.get().getName()).toUri();
+
+        return ResponseEntity.created(location).body(new ApiResponse(
+                true, "Role(s) removed successfully"));
+
+    }
 }

@@ -1,6 +1,9 @@
 package com.decagon.fintrackapp.controller;
 
+import com.decagon.fintrackapp.config.JwtTokenProvider;
 import com.decagon.fintrackapp.model.User;
+import com.decagon.fintrackapp.payload.ApiResponse;
+import com.decagon.fintrackapp.payload.JwtAuthenticationResponse;
 import com.decagon.fintrackapp.repository.UserRepository;
 import com.decagon.fintrackapp.serviceImp.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +31,9 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    JwtTokenProvider tokenProvider;
+
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     @PostMapping(value = {"/assign_roles/{roleId}/{userId}"})
     public ResponseEntity<?> assignRole(@PathVariable(value="roleId") Set<Long> roleId,
@@ -35,10 +41,18 @@ public class UserController {
         return userService.assignRole(roleId, userId);
     }
 
+    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PostMapping(value = {"/remove_roles/{roleId}/{userId}"})
+    public ResponseEntity<?> removeRole(@PathVariable(value="roleId") Set<Long> roleId,
+                                        @PathVariable(value="userId") Long userId){
+        return userService.removeUserRole(roleId, userId);
+    }
+
+
     @GetMapping("/home")
-    public String restricted(@AuthenticationPrincipal(expression = "claims['name']") String name,
-                             @AuthenticationPrincipal(expression = "claims") Map<String, Object> claims,
-                             @AuthenticationPrincipal(expression = "claims['preferred_username']") String email){
+    public ResponseEntity restricted(@AuthenticationPrincipal(expression = "claims['name']") String name,
+                                  @AuthenticationPrincipal(expression = "claims") Map<String, Object> claims,
+                                  @AuthenticationPrincipal(expression = "claims['preferred_username']") String email){
         claims.forEach((key, value) -> log.info(key+" "+value));
         Optional<User> oldUser = userRepository.getUserByEmail(email);
         User user = new User();
@@ -47,6 +61,7 @@ public class UserController {
             user.setEmail(email);
             userService.addUser(user);
         }
-        return "Hello "+name+" welcome to Fintrack";
+        final String jwt = tokenProvider.generateToken(user);
+        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
     }
 }
