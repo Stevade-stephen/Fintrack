@@ -34,8 +34,8 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
-    @Autowired
-    TransactionServiceImpl transactionService;
+//    @Autowired
+//    TransactionServiceImpl transactionService;
 
     @Autowired
     JwtTokenProvider tokenProvider;

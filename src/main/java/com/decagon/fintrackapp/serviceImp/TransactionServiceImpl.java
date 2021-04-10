@@ -71,27 +71,27 @@ public class TransactionServiceImpl {
                 "TransactionCategory has been added successfully!"));
     }
 
-    public ResponseEntity<?> addTransactionType(RequestCategory requestCategory, String description) {
-
-        if (transactionRepository.existsByName(requestCategory.getName())) {
-            return new ResponseEntity(
-                    new ApiResponse(false, "Already there is category named " + requestCategory.getName()),
-                    HttpStatus.BAD_REQUEST);
-        }
-
-       TransactionType transactionType = new TransactionType();
-        transactionType.setECashType(requestCategory.getTransactionType().getECashType());
-        transactionType.setDescription(description);
-        transactionType.setApprovalList(requestCategory.getTransactionType().getApprovalList());
-
-        TransactionType result = transactionTypeRepository.save(transactionType);
-
-        URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/request-category/{id}")
-                .buildAndExpand(result.getId()).toUri();
-
-        return ResponseEntity.created(location).body(new ApiResponse(true,
-                "TransactionCategory has been added successfully!"));
-    }
+//    public ResponseEntity<?> addTransactionType(RequestCategory requestCategory, String description) {
+//
+//        if (transactionRepository.existsByName(requestCategory.getName())) {
+//            return new ResponseEntity(
+//                    new ApiResponse(false, "Already there is category named " + requestCategory.getName()),
+//                    HttpStatus.BAD_REQUEST);
+//        }
+//
+//       TransactionType transactionType = new TransactionType();
+//        transactionType.setECashType(requestCategory.getTransactionType().getECashType());
+//        transactionType.setDescription(description);
+//        transactionType.setApprovalList(requestCategory.getTransactionType().getApprovalList());
+//
+//        TransactionType result = transactionTypeRepository.save(transactionType);
+//
+//        URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/request-category/{id}")
+//                .buildAndExpand(result.getId()).toUri();
+//
+//        return ResponseEntity.created(location).body(new ApiResponse(true,
+//                "TransactionCategory has been added successfully!"));
+//    }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public ResponseEntity<?> addClaimsCategory(ClaimsCategory category) {
