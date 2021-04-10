@@ -3,6 +3,7 @@ package com.decagon.fintrackapp.controller;
 import com.decagon.fintrackapp.model.ECategory;
 import com.decagon.fintrackapp.model.EStatus;
 import com.decagon.fintrackapp.model.RequestCategory;
+import com.decagon.fintrackapp.payload.CategoryRequest;
 import com.decagon.fintrackapp.payload.TransactionRequest;
 import com.decagon.fintrackapp.serviceImp.TransactionServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +25,10 @@ public class TransactionController {
         return transactionService.createTransaction(transactionRequest);
     }
 
-    @PostMapping(value = "create_request-Category")
-    public ResponseEntity<?> createRequestCategory(@PathVariable()){
+    @PostMapping(value = "create_request-Category/{categoryRequest}")
+    public ResponseEntity<?> createRequestCategory(@PathVariable( value = "categoryRequest") CategoryRequest categoryRequest){
 
-        return transactionService.
+        return transactionService.addRequestCategory(categoryRequest);
     }
 
     @GetMapping(value = {"view_transaction_byStatus/{transactionCategory}/{transactionStatus}"})
