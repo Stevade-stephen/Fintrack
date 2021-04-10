@@ -1,5 +1,6 @@
 package com.decagon.fintrackapp.repository;
 
+import com.decagon.fintrackapp.model.ERole;
 import com.decagon.fintrackapp.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -12,4 +13,6 @@ public interface UserRepository extends JpaRepository<User, Long>{
 
     User findByName(String username);
     Optional<User> getUserByEmail(String email);
+
+    Optional<User> getUserByRoles(ERole eRole);
 }
