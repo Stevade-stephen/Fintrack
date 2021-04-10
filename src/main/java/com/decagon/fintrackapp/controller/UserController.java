@@ -1,10 +1,13 @@
 package com.decagon.fintrackapp.controller;
 
 import com.decagon.fintrackapp.config.JwtTokenProvider;
+import com.decagon.fintrackapp.model.ECategory;
+import com.decagon.fintrackapp.model.EStatus;
 import com.decagon.fintrackapp.model.User;
 import com.decagon.fintrackapp.payload.ApiResponse;
 import com.decagon.fintrackapp.payload.JwtAuthenticationResponse;
 import com.decagon.fintrackapp.repository.UserRepository;
+import com.decagon.fintrackapp.serviceImp.TransactionServiceImpl;
 import com.decagon.fintrackapp.serviceImp.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import lombok.extern.slf4j.XSlf4j;
@@ -32,6 +35,9 @@ public class UserController {
     UserRepository userRepository;
 
     @Autowired
+    TransactionServiceImpl transactionService;
+
+    @Autowired
     JwtTokenProvider tokenProvider;
 
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
@@ -48,7 +54,6 @@ public class UserController {
         return userService.removeUserRole(roleId, userId);
     }
 
-
     @GetMapping("/home")
     public ResponseEntity restricted(@AuthenticationPrincipal(expression = "claims['name']") String name,
                                   @AuthenticationPrincipal(expression = "claims") Map<String, Object> claims,
@@ -64,4 +69,7 @@ public class UserController {
         final String jwt = tokenProvider.generateToken(user);
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
     }
+
+
+
 }
