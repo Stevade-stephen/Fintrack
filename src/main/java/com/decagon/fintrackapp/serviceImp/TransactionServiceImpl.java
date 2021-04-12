@@ -27,8 +27,8 @@ public class TransactionServiceImpl {
     RequestCategoryRepository requestCategoryRepository;
     @Autowired
     UserRepository userRepository;
-    @Autowired
-    TransactionTypeRepository transactionTypeRepository;
+    //@Autowired
+    //TransactionTypeRepository transactionTypeRepository;
 
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -58,14 +58,14 @@ public class TransactionServiceImpl {
 //            approvalList.add(user1.get());
 //            approvalList.add(user2.get());
 //        }
-            TransactionType transactionType = new TransactionType(categoryRequest.getDescription(),
-                    categoryRequest.getMin(), categoryRequest.getMax());
-            if (categoryRequest.getMax() <= 10000) {
-                transactionType.setECashType(ECashType.PETTY_CASH);
-            } else {
-                transactionType.setECashType(ECashType.CASH_FOR_UPLOAD);
-            }
-            requestCategory.setTransactionType(transactionType);
+//            TransactionType transactionType = new TransactionType(categoryRequest.getDescription(),
+//                    categoryRequest.getMin(), categoryRequest.getMax());
+////            if (categoryRequest.getMax() <= 10000) {
+//                transactionType.setECashType(ECashType.PETTY_CASH);
+//            } else {
+//                transactionType.setECashType(ECashType.CASH_FOR_UPLOAD);
+//            }
+//            requestCategory.setTransactionType(transactionType);
 
 
 //        requestCategory.getTransactionType().setApprovalList(approvalList);
@@ -150,7 +150,15 @@ public class TransactionServiceImpl {
 
         transaction.setStatus(EStatus.PENDING);
 
-        Transaction result = transactionRepository.save(transaction);
+            if (transactionRequest.getAmount() <= 10000) {
+                transaction.setECashType(ECashType.PETTY_CASH);
+            } else {
+                transaction.setECashType(ECashType.CASH_FOR_UPLOAD);
+            }
+//            requestCategory.setTransactionType(transactionType);
+
+
+                Transaction result = transactionRepository.save(transaction);
 
         URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/transaction/{title}")
                 .buildAndExpand(result.getTitle()).toUri();

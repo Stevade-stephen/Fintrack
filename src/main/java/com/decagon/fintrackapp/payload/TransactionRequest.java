@@ -18,7 +18,7 @@ public class TransactionRequest {
     @NotBlank
     private String description;
     @NotBlank
-    private String amount;
+    private double amount;
     @NotBlank
     @Column(name = ("receipt_urls"))
     @Lob

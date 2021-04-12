@@ -19,7 +19,7 @@ public class Transaction extends BaseModel{
     @NotBlank
     private String description;
     @NotBlank
-    private String amount;
+    private double amount;
     @NotBlank
     @Column(name = ("receipt_urls"))
     @Lob
@@ -34,12 +34,17 @@ public class Transaction extends BaseModel{
     @Enumerated(EnumType.STRING)
     private ECategory category;
 
+    private
 
-    @ManyToOne
-    private TransactionType TransactionType;
+    @Enumerated(EnumType.STRING)
+    private ECashType eCashType;
 
 
-    public Transaction(@NotBlank String title, @NotBlank String description, @NotBlank String amount,
+//    @ManyToOne
+//    private TransactionType TransactionType;
+
+
+    public Transaction(@NotBlank String title, @NotBlank String description, @NotBlank double amount,
                        @NotBlank String receiptUrls, ECategory category) {
         this.title = title;
         this.description = description;
