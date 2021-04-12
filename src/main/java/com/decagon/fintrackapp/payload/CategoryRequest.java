@@ -17,7 +17,7 @@ public class CategoryRequest {
     private Long min;
     private Long max;
 
-    private List<User> approvalList;
+//    private List<User> approvalList;
 
     private String categoryName;
 

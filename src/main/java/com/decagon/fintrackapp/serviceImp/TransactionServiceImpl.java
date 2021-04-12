@@ -8,6 +8,7 @@ import com.decagon.fintrackapp.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class TransactionServiceImpl {
 
     @Autowired
@@ -40,37 +42,43 @@ public class TransactionServiceImpl {
 
         List<User> approvalList = new ArrayList<>();
 
-        Optional<User> user = userRepository.getUserByRoles(ERole.LINE_MANAGER);
-        Optional<User> user1 = userRepository.getUserByRoles(ERole.FINANCIAL_CONTROLLER);
-        Optional<User> user2 = userRepository.getUserByRoles(ERole.CEO);
+//        Optional<User> user = userRepository.getUserByRoles(ERole.LINE_MANAGER);
+//        Optional<User> user1 = userRepository.getUserByRoles(ERole.FINANCIAL_CONTROLLER);
+//        Optional<User> user2 = userRepository.getUserByRoles(ERole.CEO);
 
         RequestCategory requestCategory = new RequestCategory(categoryRequest.getCategoryName());
-        if(categoryRequest.getMax() <= 10000){
-            requestCategory.getTransactionType().setECashType(ECashType.PETTY_CASH);
-            approvalList.add(user.get());
-            approvalList.add(user1.get());
+//        if (categoryRequest.getMax() <= 10000) {
+//            requestCategory.getTransactionType().setECashType(ECashType.PETTY_CASH);
+//            approvalList.add(user.get());
+//            approvalList.add(user1.get());
+//
+//        }else{
+//            requestCategory.getTransactionType().setECashType(ECashType.CASH_FOR_UPLOAD);
+//            approvalList.add(user.get());
+//            approvalList.add(user1.get());
+//            approvalList.add(user2.get());
+//        }
+            TransactionType transactionType = new TransactionType(categoryRequest.getDescription(),
+                    categoryRequest.getMin(), categoryRequest.getMax());
+            if (categoryRequest.getMax() <= 10000) {
+                transactionType.setECashType(ECashType.PETTY_CASH);
+            } else {
+                transactionType.setECashType(ECashType.CASH_FOR_UPLOAD);
+            }
+            requestCategory.setTransactionType(transactionType);
 
-        }else{
-            requestCategory.getTransactionType().setECashType(ECashType.CASH_FOR_UPLOAD);
-            approvalList.add(user.get());
-            approvalList.add(user1.get());
-            approvalList.add(user2.get());
+
+//        requestCategory.getTransactionType().setApprovalList(approvalList);
+
+            RequestCategory result = requestCategoryRepository
+                    .save(requestCategory);
+
+            URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/request-category/{id}")
+                    .buildAndExpand(result.getId()).toUri();
+
+            return ResponseEntity.created(location).body(new ApiResponse(true,
+                    "TransactionCategory has been added successfully!"));
         }
-        requestCategory.getTransactionType().setDescription(categoryRequest.getDescription());
-
-
-        requestCategory.getTransactionType().setApprovalList(approvalList);
-
-        RequestCategory result = requestCategoryRepository
-                .save(requestCategory);
-
-        URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/request-category/{id}")
-                .buildAndExpand(result.getId()).toUri();
-
-        return ResponseEntity.created(location).body(new ApiResponse(true,
-                "TransactionCategory has been added successfully!"));
-    }
-
 //    public ResponseEntity<?> addTransactionType(RequestCategory requestCategory, String description) {
 //
 //        if (transactionRepository.existsByName(requestCategory.getName())) {

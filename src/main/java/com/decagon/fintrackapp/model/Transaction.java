@@ -45,6 +45,8 @@ public class Transaction extends BaseModel{
         this.description = description;
         this.amount = amount;
         this.receiptUrls = receiptUrls;
+        this.category = category;
+
     }
 
     public Transaction() {

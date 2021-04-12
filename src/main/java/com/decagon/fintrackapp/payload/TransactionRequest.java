@@ -26,4 +26,5 @@ public class TransactionRequest {
     @NotBlank
     @Enumerated(EnumType.STRING)
     private ECategory category;
+
 }
