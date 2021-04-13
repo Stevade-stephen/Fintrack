@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @Setter
 @Table(name = ("users"))
 @Entity
-public class User extends Auditable{
+public class User extends Auditable<String>{
     private String name;
     private String email;
     private String password;

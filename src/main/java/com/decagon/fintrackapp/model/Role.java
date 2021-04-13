@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-public class Role extends Auditable{
+public class Role extends Auditable<String> {
 
 
     @Enumerated(EnumType.STRING)

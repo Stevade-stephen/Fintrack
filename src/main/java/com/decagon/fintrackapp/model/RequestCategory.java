@@ -1,10 +1,10 @@
 package com.decagon.fintrackapp.model;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @Getter
 @NoArgsConstructor
 @Entity
-public class RequestCategory extends Auditable{
+public class RequestCategory extends Auditable<String> {
     @NotBlank
     @Size(max = 64)
     private String name;

@@ -117,11 +117,11 @@ public class TransactionServiceImpl {
             return transactions.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity(new ApiResponse(false, "Transaction Status not found!"),
                     HttpStatus.BAD_REQUEST));
         }
-//        if(status.isEmpty() && category.isEmpty()){
-//            Optional<List<Transaction>> transactions = transactionRepository.findAllByECashType(eCashType.get());
-//            return transactions.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity(new ApiResponse(false,"Transaction Type not found"),
-//                    HttpStatus.BAD_REQUEST));
-//        }
+        if(status.isEmpty() && category.isEmpty()){
+            Optional<List<Transaction>> transactions = transactionRepository.findAllByCashType(eCashType.get());
+            return transactions.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity(new ApiResponse(false,"Transaction Type not found"),
+                    HttpStatus.BAD_REQUEST));
+        }
         
         Optional<List<Transaction>> transactions = transactionRepository.findAllByCategoryAndStatus(category.get(), status.get());
         return transactions.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity(new ApiResponse(false, "Specified transaction is not found!"),
@@ -136,9 +136,9 @@ public class TransactionServiceImpl {
         transaction.setStatus(EStatus.PENDING);
 
             if (transactionRequest.getAmount() <= 10000) {
-                transaction.setECashType(ECashType.PETTY_CASH);
+                transaction.setCashType(ECashType.PETTY_CASH);
             } else {
-                transaction.setECashType(ECashType.CASH_FOR_UPLOAD);
+                transaction.setCashType(ECashType.CASH_FOR_UPLOAD);
             }
 //            requestCategory.setTransactionType(transactionType);
 

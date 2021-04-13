@@ -1,5 +1,6 @@
 package com.decagon.fintrackapp.payload;
 
+import com.decagon.fintrackapp.model.ECashType;
 import com.decagon.fintrackapp.model.ECategory;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,5 +27,9 @@ public class TransactionRequest {
     @NotBlank
     @Enumerated(EnumType.STRING)
     private ECategory category;
+
+    @Enumerated(EnumType.STRING)
+    private ECashType eCashType;
+
 
 }

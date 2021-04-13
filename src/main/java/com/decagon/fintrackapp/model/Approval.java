@@ -12,7 +12,7 @@ import javax.persistence.Table;
 @Setter
 @Table(name = ("approvals"))
 @Entity
-public class Approval extends Auditable{
+public class Approval extends Auditable<String>{
     private String status;
 
 

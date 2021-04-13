@@ -1,6 +1,7 @@
 package com.decagon.fintrackapp.model;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -12,6 +13,8 @@ import java.time.LocalDateTime;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
+@Getter
+@Setter
 public abstract class Auditable <U>{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,17 +22,20 @@ public abstract class Auditable <U>{
 
     @CreatedBy
     @Column(name = "created_by")
+//    @Type(type = "User")
     private U createdBy;
     @CreatedDate
     @Column(name = "created_date")
     private LocalDateTime createdDate;
     @LastModifiedBy
     @Column(name = "last_modified_by")
+//    @Type(type = "User")
     private U lastModifiedBy;
     @LastModifiedDate
     @Column(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;
     @CreatedBy
+//    @Type(type = "User")
     @Column(name = "deleted_by")
     private U deletedBy;
     @CreatedDate

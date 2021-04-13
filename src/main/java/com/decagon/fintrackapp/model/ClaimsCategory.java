@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 @Entity
-public class ClaimsCategory extends Auditable {
+public class ClaimsCategory extends Auditable<String> {
     @NotBlank
     @Size(max = 64)
     private String name;

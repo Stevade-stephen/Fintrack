@@ -17,6 +17,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     Optional<List<Transaction>> findAllByStatus(EStatus status);
     Optional<List<Transaction>> findAllByCategoryAndStatus(ECategory category, EStatus status);
     Optional<List<Transaction>> findAllByCategory(ECategory category);
-    Optional<List<Transaction>> findAllByECashType(ECashType eCashType);
+    Optional<List<Transaction>> findAllByCashType(ECashType cashType);
     Boolean existsByTitle(String title);
 }

@@ -13,7 +13,7 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @Table(name = ("companies"))
 @Entity
-public class Company extends Auditable{
+public class Company extends Auditable<String> {
 
     @NotBlank
     @Column(name = ("company_name"))
