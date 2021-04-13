@@ -13,7 +13,7 @@ import java.time.Instant;
 @Setter
 @Table(name = ("transactions"))
 @Entity
-public class Transaction extends BaseModel{
+public class Transaction extends Auditable{
     @NotBlank
     private String title;
     @NotBlank
@@ -33,8 +33,6 @@ public class Transaction extends BaseModel{
 
     @Enumerated(EnumType.STRING)
     private ECategory category;
-
-    private
 
     @Enumerated(EnumType.STRING)
     private ECashType eCashType;

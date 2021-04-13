@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-public class Role extends BaseModel{
+public class Role extends Auditable{
 
 
     @Enumerated(EnumType.STRING)

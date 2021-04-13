@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @Table(name = ("departments"))
 @Entity
-public class Department extends BaseModel{
+public class Department extends Auditable{
     private String name;
 
     @OneToMany

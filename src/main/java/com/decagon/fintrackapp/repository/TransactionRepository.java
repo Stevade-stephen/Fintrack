@@ -1,6 +1,7 @@
 package com.decagon.fintrackapp.repository;
 
 
+import com.decagon.fintrackapp.model.ECashType;
 import com.decagon.fintrackapp.model.ECategory;
 import com.decagon.fintrackapp.model.EStatus;
 import com.decagon.fintrackapp.model.Transaction;
@@ -16,5 +17,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     Optional<List<Transaction>> findAllByStatus(EStatus status);
     Optional<List<Transaction>> findAllByCategoryAndStatus(ECategory category, EStatus status);
     Optional<List<Transaction>> findAllByCategory(ECategory category);
+    Optional<List<Transaction>> findAllByECashType(ECashType eCashType);
     Boolean existsByTitle(String title);
 }

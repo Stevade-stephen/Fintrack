@@ -1,5 +1,6 @@
 package com.decagon.fintrackapp.controller;
 
+import com.decagon.fintrackapp.model.ECashType;
 import com.decagon.fintrackapp.model.ECategory;
 import com.decagon.fintrackapp.model.EStatus;
 import com.decagon.fintrackapp.model.RequestCategory;
@@ -32,24 +33,41 @@ public class TransactionController {
 
     @GetMapping(value = {"/view_transaction_ByCategory/{transactionCategory}"})
     public ResponseEntity<?> viewTransactionByCategory(@PathVariable(value = "transactionCategory") Optional<ECategory> transactionCategory,
-                                                     @PathVariable(value = "transactionStatus")Optional<EStatus> transactionStatus){
-        return transactionService.viewTransactions( transactionCategory, transactionStatus);
-
-    }    @GetMapping(value = {"/view_transaction_ByStatus/{transactionStatus}"})
-    public ResponseEntity<?> viewTransactionByStatus(@PathVariable(value = "transactionCategory") Optional<ECategory> transactionCategory,
-                                                     @PathVariable(value = "transactionStatus")Optional<EStatus> transactionStatus){
-        return transactionService.viewTransactions( transactionCategory, transactionStatus);
-
-    }    @GetMapping(value = {"/view_all_transaction"})
-    public ResponseEntity<?> viewAllTransaction(@PathVariable(value = "transactionCategory") Optional<ECategory> transactionCategory,
-                                                     @PathVariable(value = "transactionStatus")Optional<EStatus> transactionStatus){
-        return transactionService.viewTransactions( transactionCategory, transactionStatus);
-
-    }    @GetMapping(value = {"/view_transaction_byStatus/{transactionCategory}/{transactionStatus}"})
-    public ResponseEntity<?> viewTransactionByStatusAndCategory(@PathVariable(value = "transactionCategory") Optional<ECategory> transactionCategory,
-                                                     @PathVariable(value = "transactionStatus")Optional<EStatus> transactionStatus){
-        return transactionService.viewTransactions( transactionCategory, transactionStatus);
+                                                       @PathVariable(value = "transactionStatus")Optional<EStatus> transactionStatus,
+                                                       @PathVariable(value = "transactionECashType")Optional<ECashType> transactionECashType){
+        return transactionService.viewTransactions( transactionCategory, transactionStatus, transactionECashType);
 
     }
 
+    @GetMapping(value = {"/view_transaction_ByStatus/{transactionStatus}"})
+    public ResponseEntity<?> viewTransactionByStatus(@PathVariable(value = "transactionCategory") Optional<ECategory> transactionCategory,
+                                                     @PathVariable(value = "transactionStatus")Optional<EStatus> transactionStatus,
+                                                     @PathVariable(value = "transactionECashType")Optional<ECashType> transactionECashType){
+        return transactionService.viewTransactions( transactionCategory, transactionStatus, transactionECashType);
+
+    }
+
+    @GetMapping(value = {"/view_all_transaction"})
+    public ResponseEntity<?> viewAllTransaction(@PathVariable(value = "transactionCategory") Optional<ECategory> transactionCategory,
+                                                     @PathVariable(value = "transactionStatus")Optional<EStatus> transactionStatus,
+                                                @PathVariable(value = "transactionECashType")Optional<ECashType> transactionECashType){
+        return transactionService.viewTransactions( transactionCategory, transactionStatus, transactionECashType);
+
+    }
+
+    @GetMapping(value = {"/view_transaction_byStatus/{transactionCategory}/{transactionStatus}"})
+    public ResponseEntity<?> viewTransactionByStatusAndCategory(@PathVariable(value = "transactionCategory") Optional<ECategory> transactionCategory,
+                                                                @PathVariable(value = "transactionStatus")Optional<EStatus> transactionStatus,
+                                                                @PathVariable(value = "transactionECashType")Optional<ECashType> transactionECashType){
+        return transactionService.viewTransactions( transactionCategory, transactionStatus, transactionECashType);
+    }
+
+    @GetMapping(value = {"/view_transaction_byECash/{transactionECashType}"})
+    public ResponseEntity<?> viewTransactionByECashType(@PathVariable(value = "transactionCategory") Optional<ECategory> transactionCategory,
+                                                        @PathVariable(value = "transactionStatus")Optional<EStatus> transactionStatus,
+                                                        @PathVariable(value = "transactionECashType")Optional<ECashType> transactionECashType){
+        return transactionService.viewTransactions(transactionCategory, transactionStatus, transactionECashType);
+    }
+
+    @
 }

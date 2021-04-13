@@ -79,27 +79,6 @@ public class TransactionServiceImpl {
             return ResponseEntity.created(location).body(new ApiResponse(true,
                     "TransactionCategory has been added successfully!"));
         }
-//    public ResponseEntity<?> addTransactionType(RequestCategory requestCategory, String description) {
-//
-//        if (transactionRepository.existsByName(requestCategory.getName())) {
-//            return new ResponseEntity(
-//                    new ApiResponse(false, "Already there is category named " + requestCategory.getName()),
-//                    HttpStatus.BAD_REQUEST);
-//        }
-//
-//       TransactionType transactionType = new TransactionType();
-//        transactionType.setECashType(requestCategory.getTransactionType().getECashType());
-//        transactionType.setDescription(description);
-//        transactionType.setApprovalList(requestCategory.getTransactionType().getApprovalList());
-//
-//        TransactionType result = transactionTypeRepository.save(transactionType);
-//
-//        URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/request-category/{id}")
-//                .buildAndExpand(result.getId()).toUri();
-//
-//        return ResponseEntity.created(location).body(new ApiResponse(true,
-//                "TransactionCategory has been added successfully!"));
-//    }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public ResponseEntity<?> addClaimsCategory(ClaimsCategory category) {
@@ -121,22 +100,28 @@ public class TransactionServiceImpl {
 
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public ResponseEntity<?> viewTransactions(Optional<ECategory> category, Optional<EStatus> status) {
+    public ResponseEntity<?> viewTransactions(Optional<ECategory> category, Optional<EStatus> status,
+                                              Optional<ECashType> eCashType) {
 
-        if (status.isEmpty() && category.isEmpty()) {
+        if (status.isEmpty() && category.isEmpty() && eCashType.isEmpty()) {
             List<Transaction> transactions = transactionRepository.findAll();
             return new ResponseEntity<>(transactions, HttpStatus.OK);
         }
-        if (category.isEmpty()){
+        if (category.isEmpty() && eCashType.isEmpty()){
             Optional<List<Transaction>> transactions = transactionRepository.findAllByStatus(status.get());
             return transactions.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity(new ApiResponse(false, "Transaction Category not found!"),
                     HttpStatus.BAD_REQUEST));
         }
-        if(status.isEmpty()){
+        if(status.isEmpty() && eCashType.isEmpty()){
             Optional<List<Transaction>> transactions = transactionRepository.findAllByCategory(category.get());
             return transactions.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity(new ApiResponse(false, "Transaction Status not found!"),
                     HttpStatus.BAD_REQUEST));
         }
+//        if(status.isEmpty() && category.isEmpty()){
+//            Optional<List<Transaction>> transactions = transactionRepository.findAllByECashType(eCashType.get());
+//            return transactions.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity(new ApiResponse(false,"Transaction Type not found"),
+//                    HttpStatus.BAD_REQUEST));
+//        }
         
         Optional<List<Transaction>> transactions = transactionRepository.findAllByCategoryAndStatus(category.get(), status.get());
         return transactions.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity(new ApiResponse(false, "Specified transaction is not found!"),

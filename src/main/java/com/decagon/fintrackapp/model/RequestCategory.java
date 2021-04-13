@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @Getter
 @NoArgsConstructor
 @Entity
-public class RequestCategory extends BaseModel{
+public class RequestCategory extends Auditable{
     @NotBlank
     @Size(max = 64)
     private String name;
