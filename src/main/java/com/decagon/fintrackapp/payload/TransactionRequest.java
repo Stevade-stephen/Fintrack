@@ -28,8 +28,8 @@ public class TransactionRequest {
     @Enumerated(EnumType.STRING)
     private ECategory category;
 
-    @Enumerated(EnumType.STRING)
-    private ECashType eCashType;
+//    @Enumerated(EnumType.STRING)
+//    private ECashType eCashType;
 
 
 }

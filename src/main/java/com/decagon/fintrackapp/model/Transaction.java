@@ -13,7 +13,7 @@ import java.time.Instant;
 @Setter
 @Table(name = ("transactions"))
 @Entity
-public class Transaction {
+public class Transaction extends Auditable<String>{
     @NotBlank
     private String title;
     @NotBlank
@@ -36,9 +36,6 @@ public class Transaction {
 
     @Enumerated(EnumType.STRING)
     private ECashType cashType;
-    @Id
-    private String id;
-
 
 //    @ManyToOne
 //    private TransactionType TransactionType;
@@ -57,11 +54,4 @@ public class Transaction {
     public Transaction() {
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getId() {
-        return id;
-    }
 }

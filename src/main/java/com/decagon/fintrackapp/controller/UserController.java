@@ -65,6 +65,7 @@ public class UserController {
             user.setName(name);
             user.setEmail(email);
             userService.addUser(user);
+
         }
         final String jwt = tokenProvider.generateToken(user);
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
