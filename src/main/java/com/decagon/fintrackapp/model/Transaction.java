@@ -3,6 +3,7 @@ package com.decagon.fintrackapp.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.time.Instant;
 
 @Getter
 @Setter
+@ToString
 @Table(name = ("transactions"))
 @Entity
 public class Transaction extends Auditable<String>{

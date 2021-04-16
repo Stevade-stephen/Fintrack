@@ -22,20 +22,20 @@ public abstract class Auditable <U>{
 
     @CreatedBy
     @Column(name = "created_by")
-//    @Type(type = "User")
+
     private U createdBy;
     @CreatedDate
     @Column(name = "created_date")
     private LocalDateTime createdDate;
     @LastModifiedBy
     @Column(name = "last_modified_by")
-//    @Type(type = "User")
+
     private U lastModifiedBy;
     @LastModifiedDate
     @Column(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;
     @CreatedBy
-//    @Type(type = "User")
+
     @Column(name = "deleted_by")
     private U deletedBy;
     @CreatedDate

@@ -1,22 +1,28 @@
 package com.decagon.fintrackapp.serviceImp;
 
+import com.decagon.fintrackapp.exception.AppException;
 import com.decagon.fintrackapp.model.*;
 import com.decagon.fintrackapp.payload.ApiResponse;
 import com.decagon.fintrackapp.payload.TransactionRequest;
 import com.decagon.fintrackapp.payload.CategoryRequest;
 import com.decagon.fintrackapp.repository.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.persistence.Transient;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class TransactionServiceImpl {
 
     @Autowired
@@ -128,7 +134,7 @@ public class TransactionServiceImpl {
                 HttpStatus.BAD_REQUEST));
     }
 
-
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public ResponseEntity<?> createTransaction(TransactionRequest transactionRequest) {
         Transaction transaction = new Transaction(transactionRequest.getTitle(), transactionRequest.getDescription(),
                 transactionRequest.getAmount(), transactionRequest.getReceiptUrls(), transactionRequest.getCategory());
@@ -150,6 +156,48 @@ public class TransactionServiceImpl {
 
         return ResponseEntity.created(location).body(new ApiResponse(
                 true, "transaction added successfully"));
+
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public ResponseEntity<?> editTransaction(Long id, TransactionRequest transactionRequest ) {
+        Transaction transaction = transactionRepository.findById(id).orElseThrow(() -> new AppException("Transaction does not exist"));
+        log.info(transaction.toString());
+        transaction.setAmount(transactionRequest.getAmount());
+        transaction.setCategory(transactionRequest.getCategory());
+        transaction.setDescription(transactionRequest.getDescription());//
+        transaction.setReceiptUrls(transactionRequest.getReceiptUrls());
+        transaction.setTitle(transactionRequest.getTitle());
+//        transaction.setStatus(EStatus.PENDING);
+//
+//        if (transactionRequest.getAmount() <= 10000) {
+//            transaction.setCashType(ECashType.PETTY_CASH);
+//        } else {
+//            transaction.setCashType(ECashType.CASH_FOR_UPLOAD);
+//        }
+////        transaction1.setLastModifiedDate(transaction.getLastModifiedDate());
+
+//        log.info("I'm here");
+
+        transaction.setStatus(EStatus.PENDING);
+
+        if (transactionRequest.getAmount() <= 10000) {
+            transaction.setCashType(ECashType.PETTY_CASH);
+        } else {
+            transaction.setCashType(ECashType.CASH_FOR_UPLOAD);
+        }
+//            requestCategory.setTransactionType(transactionType);
+
+
+        Transaction result = transactionRepository.save(transaction);
+        log.info(result.toString());
+        log.info("im here");
+
+        URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/transaction/{title}")
+                .buildAndExpand(result.getTitle()).toUri();
+
+        return ResponseEntity.created(location).body(new ApiResponse(
+                true, "transaction updated successfully"));
 
     }
 }
