@@ -1,9 +1,10 @@
 package com.decagon.fintrackapp;
 
 
-import com.decagon.fintrackapp.model.ERole;
+import com.decagon.fintrackapp.model.Company;
 import com.decagon.fintrackapp.model.Role;
 import com.decagon.fintrackapp.model.User;
+import com.decagon.fintrackapp.repository.CompanyRepository;
 import com.decagon.fintrackapp.repository.RoleRepository;
 import com.decagon.fintrackapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.Set;
+
+import static com.decagon.fintrackapp.model.ERole.*;
 
 /**
  * Adds the first
@@ -28,12 +31,14 @@ public class SpringJpaBootstrapAdmin implements ApplicationListener<ContextRefre
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CompanyRepository companyRepository;
 
     @Autowired
-    public SpringJpaBootstrapAdmin(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public SpringJpaBootstrapAdmin(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, CompanyRepository companyRepository) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.companyRepository = companyRepository;
     }
 
     @Override
@@ -42,7 +47,7 @@ public class SpringJpaBootstrapAdmin implements ApplicationListener<ContextRefre
     }
 
     private void loadFirstUserAsAdmin() {
-        Optional<Role> role = roleRepository.findByAppUserRole(ERole.SUPER_ADMIN);
+        Optional<Role> role = roleRepository.findByAppUserRole(SUPER_ADMIN);
         if (role.isEmpty()) {
             User superAdmin = new User();
             superAdmin.setName("temporalAdmin");
@@ -56,11 +61,12 @@ public class SpringJpaBootstrapAdmin implements ApplicationListener<ContextRefre
             Role role5 = new Role();
 
 
-            role1.setAppUserRole(ERole.CEO);
-            role2.setAppUserRole(ERole.SUPER_ADMIN);
-            role3.setAppUserRole(ERole.REQUESTER);
-            role4.setAppUserRole(ERole.FINANCIAL_CONTROLLER);
-            role5.setAppUserRole(ERole.LINE_MANAGER);
+
+            role1.setAppUserRole(CEO);
+            role2.setAppUserRole(SUPER_ADMIN);
+            role3.setAppUserRole(REQUESTER);
+            role4.setAppUserRole(FINANCIAL_CONTROLLER);
+            role5.setAppUserRole(LINE_MANAGER);
 
             roleRepository.save(role1);
             roleRepository.save(role2);
@@ -70,6 +76,9 @@ public class SpringJpaBootstrapAdmin implements ApplicationListener<ContextRefre
 
             superAdmin.setRoles(Set.of(role1, role2, role3));
             userRepository.save(superAdmin);
+
+            Company company = new Company();
+            companyRepository.save(company);
         }
     }
 }

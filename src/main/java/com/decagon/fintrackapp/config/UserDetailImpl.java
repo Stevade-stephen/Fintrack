@@ -90,7 +90,8 @@ public class UserDetailImpl implements UserDetails {
     }
 
     public static UserDetails buildUserDetail(User user) {
-        List<GrantedAuthority> grantedAuthorities = user.getRoles().stream()
+        List<GrantedAuthority> grantedAuthorities = user.getRoles()
+                .stream()
                 .map(userRole -> new SimpleGrantedAuthority(userRole.getAppUserRole().name()))
                 .collect(Collectors.toList());
         return new UserDetailImpl(

@@ -33,4 +33,7 @@ public class User extends Auditable<String>{
     private Set<Role> roles = new HashSet<>();
     @OneToMany
     private  List<Approval> approvals;
+
+    @ManyToOne
+    private Company company;
 }

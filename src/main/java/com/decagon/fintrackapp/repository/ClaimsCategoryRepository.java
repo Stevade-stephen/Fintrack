@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ClaimsCategoryRepository extends JpaRepository<ClaimsCategory, Long> {
     Boolean existsByName(String name);
+    ClaimsCategory findClaimsCategoriesByName (ClaimsCategory claimsCategory);
 }

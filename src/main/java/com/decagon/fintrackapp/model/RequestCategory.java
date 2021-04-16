@@ -1,5 +1,6 @@
 package com.decagon.fintrackapp.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,15 +14,12 @@ import javax.validation.constraints.Size;
 @Getter
 @NoArgsConstructor
 @Entity
+@AllArgsConstructor
 public class RequestCategory extends Auditable<String> {
     @NotBlank
     @Size(max = 64)
     private String name;
+    private Long min;
+    private Long max;
 
-    //@OneToOne(cascade = {CascadeType.ALL})
-
-
-    public RequestCategory(@NotBlank @Size(max = 64) String name) {
-        this.name = name;
-    }
 }

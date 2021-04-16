@@ -27,9 +27,9 @@ spring:
             redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
             scope: openid, profile
   datasource:
-    url: jdbc:mysql://localhost:3306/fintrack?serverTimezone=UTC
-    username: root
-    password: 2gud4dem
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME:fintrack}
+    password: ${SPRING_DATASOURCE_PASSWORD:fintrack}
   jpa:
     properties:
       hibernate:

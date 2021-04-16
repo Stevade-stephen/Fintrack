@@ -1,4 +1,4 @@
-package com.decagon.fintrackapp.serviceImp;
+package com.decagon.fintrackapp.serviceImp.super_admin_service;
 
 import com.decagon.fintrackapp.exception.AppException;
 import com.decagon.fintrackapp.model.*;

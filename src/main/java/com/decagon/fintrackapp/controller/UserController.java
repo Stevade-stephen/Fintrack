@@ -1,32 +1,25 @@
 package com.decagon.fintrackapp.controller;
 
 import com.decagon.fintrackapp.config.JwtTokenProvider;
-import com.decagon.fintrackapp.model.ECategory;
-import com.decagon.fintrackapp.model.EStatus;
+import com.decagon.fintrackapp.model.ERole;
 import com.decagon.fintrackapp.model.User;
-import com.decagon.fintrackapp.payload.ApiResponse;
 import com.decagon.fintrackapp.payload.JwtAuthenticationResponse;
 import com.decagon.fintrackapp.repository.UserRepository;
-import com.decagon.fintrackapp.serviceImp.TransactionServiceImpl;
-import com.decagon.fintrackapp.serviceImp.UserServiceImpl;
+import com.decagon.fintrackapp.serviceImp.super_admin_service.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import lombok.extern.slf4j.XSlf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
 @RestController
+@RequestMapping(value = "/fintrack")
 public class UserController {
 
     @Autowired
@@ -65,6 +58,8 @@ public class UserController {
             user.setName(name);
             user.setEmail(email);
             userService.addUser(user);
+
+//            user.setRoles(Set.of(ERole.REQUESTER));
 
         }
         final String jwt = tokenProvider.generateToken(user);

@@ -60,7 +60,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .csrf()
                     .disable()
                     .authorizeRequests()
-                    .antMatchers("/auth/callback","/oauth2/**","/", "/login", "/h2-console").permitAll()
+                    .antMatchers("/auth/callback","/oauth2/**","/", "/login", "/h2-console", "/swagger-ui/**", "/configuration/**",
+                            "/swagger-resources/**", "/v2/api-docs","/webjars/**").permitAll()
                     .anyRequest().authenticated()
                     .and()
                     .oauth2Login()

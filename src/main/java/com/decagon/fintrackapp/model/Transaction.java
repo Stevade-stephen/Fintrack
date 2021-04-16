@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.Instant;
+import java.util.List;
 
 @Getter
 @Setter
@@ -38,6 +39,9 @@ public class Transaction extends Auditable<String>{
 
     @Enumerated(EnumType.STRING)
     private ECashType cashType;
+
+    @ManyToMany
+    private List<User> approvalList;
 
 //    @ManyToOne
 //    private TransactionType TransactionType;

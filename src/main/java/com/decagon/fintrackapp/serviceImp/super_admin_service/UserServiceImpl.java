@@ -1,6 +1,7 @@
-package com.decagon.fintrackapp.serviceImp;
+package com.decagon.fintrackapp.serviceImp.super_admin_service;
 
 import com.decagon.fintrackapp.exception.AppException;
+import com.decagon.fintrackapp.model.ERole;
 import com.decagon.fintrackapp.model.Role;
 import com.decagon.fintrackapp.model.User;
 import com.decagon.fintrackapp.payload.ApiResponse;
@@ -17,6 +18,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.decagon.fintrackapp.model.ERole.*;
+
 
 @Service
 public class UserServiceImpl {
@@ -28,12 +31,28 @@ public class UserServiceImpl {
 
     public ResponseEntity<?> assignRole(Set<Long> roleId, Long userId) {
         Optional<User> user = userRepository.findById(userId);
-        if(user.isEmpty()) throw new AppException("User does not exist");
+        if(user.isEmpty()) {
+            throw new AppException("User does not exist");
+        }
         Set<Role> role = roleId.stream()
                 .map(id ->roleRepository.findById(id).get()).collect(Collectors.toSet());
+        Role lineManger = roleRepository.findByAppUserRole(LINE_MANAGER).get();
+        Role companyCEO = roleRepository.findByAppUserRole(CEO).get();
+        Role financialController = roleRepository.findByAppUserRole(FINANCIAL_CONTROLLER).get();
+
         role.addAll(user.get().getRoles());
         user.get().setRoles(role);
         userRepository.save(user.get());
+
+        if(role.contains(lineManger)) {
+            user.get().getDepartment().setLineManager(user.get());
+        }
+        if(role.contains(companyCEO)){
+            user.get().getCompany().setCompanyCeo(user.get());
+        }
+        if(role.contains(financialController)){
+            user.get().getCompany().setFinancialController(user.get());
+        }
         URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/users/{username}")
                 .buildAndExpand(user.get().getName()).toUri();
 
@@ -60,4 +79,5 @@ public class UserServiceImpl {
                 true, "Role(s) removed successfully"));
 
     }
+
 }

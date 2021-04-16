@@ -16,8 +16,8 @@ public class Approval extends Auditable<String>{
     private String status;
 
 
-    @OneToOne
-    private Transaction transaction;
+//    @OneToOne
+//    private Transaction transaction;
     @ManyToOne
     private User user;
     @OneToOne
