@@ -1,6 +1,7 @@
 package com.decagon.fintrackapp.serviceImp.requester_service;
 
 
+import com.decagon.fintrackapp.WebSecurityAuditable;
 import com.decagon.fintrackapp.model.*;
 import com.decagon.fintrackapp.payload.ApiResponse;
 import com.decagon.fintrackapp.payload.TransactionRequest;
@@ -15,7 +16,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.decagon.fintrackapp.model.ECashType.*;
 

@@ -1,10 +1,14 @@
 package com.decagon.fintrackapp.serviceImp.super_admin_service;
 
+import com.decagon.fintrackapp.config.JwtTokenProvider;
 import com.decagon.fintrackapp.exception.AppException;
+import com.decagon.fintrackapp.model.Company;
 import com.decagon.fintrackapp.model.ERole;
 import com.decagon.fintrackapp.model.Role;
 import com.decagon.fintrackapp.model.User;
 import com.decagon.fintrackapp.payload.ApiResponse;
+import com.decagon.fintrackapp.payload.JwtAuthenticationResponse;
+import com.decagon.fintrackapp.repository.CompanyRepository;
 import com.decagon.fintrackapp.repository.RoleRepository;
 import com.decagon.fintrackapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +32,29 @@ public class UserServiceImpl {
     UserRepository userRepository;
     @Autowired
     RoleRepository roleRepository;
+    @Autowired
+    CompanyRepository companyRepository;
+    @Autowired
+    JwtTokenProvider tokenProvider;
+
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public ResponseEntity<?> createUser(String name, String email) {
+        Optional<User> oldUser = userRepository.getUserByEmail(email);
+        User user = new User();
+        if (oldUser.isEmpty()) {
+            user.setName(name);
+            user.setEmail(email);
+            Optional<Company> company = companyRepository.findById(1L);
+            user.setCompany(company.get());
+            Optional<Role> role = roleRepository.findByAppUserRole(REQUESTER);
+            user.setRoles(Set.of(role.get()));
+            userRepository.save(user);
+    }
+    final String jwt = tokenProvider.generateToken(user);
+        System.err.println("errrrrr33");
+        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
+    }
 
     public ResponseEntity<?> assignRole(Set<Long> roleId, Long userId) {
         Optional<User> user = userRepository.findById(userId);
@@ -58,10 +85,6 @@ public class UserServiceImpl {
 
         return ResponseEntity.created(location).body(new ApiResponse(
                 true, "Role added successfully"));
-    }
-
-    public void addUser(User user) {
-        userRepository.save(user);
     }
 
 

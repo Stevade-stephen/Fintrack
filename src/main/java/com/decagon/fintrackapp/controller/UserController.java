@@ -30,10 +30,9 @@ public class UserController {
 //    @Autowired
 //    TransactionServiceImpl transactionService;
 
-    @Autowired
-    JwtTokenProvider tokenProvider;
 
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+
+   // @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     @PostMapping(value = {"/assign_roles/{roleId}/{userId}"})
     public ResponseEntity<?> assignRole(@PathVariable(value="roleId") Set<Long> roleId,
                                         @PathVariable(value="userId") Long userId){
@@ -48,24 +47,10 @@ public class UserController {
     }
 
     @GetMapping("/home")
-    public ResponseEntity restricted(@AuthenticationPrincipal(expression = "claims['name']") String name,
+    public ResponseEntity<?> restricted(@AuthenticationPrincipal(expression = "claims['name']") String name,
                                   @AuthenticationPrincipal(expression = "claims") Map<String, Object> claims,
                                   @AuthenticationPrincipal(expression = "claims['preferred_username']") String email){
-        claims.forEach((key, value) -> log.info(key+" "+value));
-        Optional<User> oldUser = userRepository.getUserByEmail(email);
-        User user = new User();
-        if(oldUser.isEmpty()) {
-            user.setName(name);
-            user.setEmail(email);
-            userService.addUser(user);
-
-//            user.setRoles(Set.of(ERole.REQUESTER));
-
-        }
-        final String jwt = tokenProvider.generateToken(user);
-        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
+        System.out.println("I got here");
+        return userService.createUser(name, email);
     }
-
-
-
 }

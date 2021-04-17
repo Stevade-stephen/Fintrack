@@ -77,6 +77,7 @@ public class UserDetailImpl implements UserDetails {
     public UserDetailImpl(User user) {
         this(user, new ArrayList<GrantedAuthority>());
     }
+
     public UserDetailImpl(User user, Collection<? extends GrantedAuthority> grantedAuthorities) {
         this.user = user;
         this.grantedAuthorities = grantedAuthorities;

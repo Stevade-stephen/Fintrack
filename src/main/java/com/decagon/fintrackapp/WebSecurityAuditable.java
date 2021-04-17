@@ -1,6 +1,7 @@
-package com.decagon.fintrackapp.model;
+package com.decagon.fintrackapp;
 
 import com.decagon.fintrackapp.config.UserDetailImpl;
+import com.decagon.fintrackapp.model.User;
 import com.decagon.fintrackapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.AuditorAware;
@@ -19,7 +20,7 @@ public class WebSecurityAuditable implements AuditorAware {
 ////        return Optional.ofNullable("Remi").filter(s-> !s.isEmpty());
 //        return ((UserDetailImpl) authentication.getPrincipal()).getUser();
 //    }
-
+@Override
     public Optional getCurrentAuditor(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication == null || !authentication.isAuthenticated()){
