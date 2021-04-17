@@ -43,8 +43,11 @@ public class Transaction extends Auditable<String>{
     @ManyToMany
     private List<User> approvalList;
 
-//    @ManyToOne
-//    private TransactionType TransactionType;
+    @ManyToOne
+    private User requester;
+
+    @OneToOne
+    private Approval approval;
 
 
     public Transaction(@NotBlank String title, @NotBlank String description, @NotBlank double amount,

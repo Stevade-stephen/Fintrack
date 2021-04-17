@@ -14,12 +14,10 @@ import javax.persistence.Table;
 @Entity
 public class Approval extends Auditable<String>{
     private String status;
+    private boolean isApprovedByLineManager =false;
+    private boolean isApprovedByCEO = false;
+    private boolean isApprovedByFinancialController = false;
 
-
-//    @OneToOne
-//    private Transaction transaction;
-    @ManyToOne
-    private User user;
     @OneToOne
-    private Role role;
+    private Transaction transaction;
 }

@@ -39,7 +39,7 @@ public class TransactionServiceImpl {
 
         if (requestCategoryRepository.existsByName(categoryRequest.getCategoryName())) {
             return new ResponseEntity(
-                    new ApiResponse(false, "Already there is category named " + categoryRequest.getCategoryName()),
+                    new ApiResponse(false, "There is already a category named " + categoryRequest.getCategoryName()),
                     HttpStatus.BAD_REQUEST);
         }
 

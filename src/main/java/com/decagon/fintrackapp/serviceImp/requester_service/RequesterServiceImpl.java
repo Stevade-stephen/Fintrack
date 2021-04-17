@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.decagon.fintrackapp.model.ECashType.*;
+
 @Service
 public class RequesterServiceImpl {
 
@@ -43,17 +45,18 @@ public class RequesterServiceImpl {
 
         transaction.setStatus(EStatus.PENDING);
         Optional <User>currentAuditor = webSecurityAuditable.getCurrentAuditor();
+        transaction.setRequester(currentAuditor.get());
         Department department = currentAuditor.get().getDepartment();
         Company company =  currentAuditor.get().getCompany();
 
 
         if (transactionRequest.getAmount() <= 10000) {
-            transaction.setCashType(ECashType.PETTY_CASH);
-            transaction.setApprovalList(List.of(department.getLineManager()));
+            transaction.setCashType(PETTY_CASH);
+            transaction.setApprovalList(List.of(department.getLineManager(), company.getFinancialController()));
 
 
         } else {
-            transaction.setCashType(ECashType.CASH_FOR_UPLOAD);
+            transaction.setCashType(CASH_FOR_UPLOAD);
             transaction.setApprovalList(List.of(department.getLineManager(), company.getFinancialController(), company.getCompanyCeo()));
         }
 //            requestCategory.setTransactionType(transactionType);
