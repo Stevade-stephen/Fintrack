@@ -26,6 +26,10 @@ public class WebSecurityAuditable implements AuditorAware {
         if(authentication == null || !authentication.isAuthenticated()){
             return Optional.empty();
         }
-        return Optional.ofNullable(userRepository.findByName(authentication.getName()).getName());
+
+
+    String name = authentication.getName();
+    System.err.println(name);
+    return Optional.ofNullable(name);
     }
 }
