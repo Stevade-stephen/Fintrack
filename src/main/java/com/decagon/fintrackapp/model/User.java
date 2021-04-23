@@ -12,7 +12,7 @@ import javax.persistence.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@ToString
+
 @Getter
 @Setter
 @Table(name = ("users"))

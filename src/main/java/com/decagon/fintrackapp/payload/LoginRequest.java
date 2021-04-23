@@ -1,28 +1,19 @@
 package com.decagon.fintrackapp.payload;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.validation.constraints.NotBlank;
 
+@Getter
+@AllArgsConstructor
 public class LoginRequest {
 
     @NotBlank
-    private String usernameOrEmail;
+    private String username;
 
     @NotBlank
-    private String password;
+    private String email;
 
-    public String getUsernameOrEmail() {
-        return usernameOrEmail;
-    }
-
-    public void setUsernameOrEmail(String usernameOrEmail) {
-        this.usernameOrEmail = usernameOrEmail;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

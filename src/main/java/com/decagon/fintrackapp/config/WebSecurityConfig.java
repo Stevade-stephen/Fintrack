@@ -60,12 +60,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .csrf()
                     .disable()
                     .authorizeRequests()
-                    .antMatchers("/auth/callback","/oauth2/**","/", "/login", "/h2-console", "/swagger-ui/**", "/configuration/**",
-                            "/swagger-resources/**", "/v2/api-docs","/webjars/**").permitAll()
+                    .antMatchers("/auth/callback","/oauth2/**","/", "/login", "/h2-console", "/swagger-ui.html", "/configuration/**",
+                            "/swagger-resources/**", "/v2/api-docs/**","/api-doc","/webjars/**").permitAll()
                     .anyRequest().authenticated()
                     .and()
                     .oauth2Login()
-                    .defaultSuccessUrl("/home");
+                    .defaultSuccessUrl("/home")
+                    .and()
+                    .formLogin()
+                    .permitAll();
             http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         }
 
@@ -86,5 +89,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         provider.setUserDetailsService(userServiceDetails);
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
+    }
+
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth)
+            throws Exception
+    {
+        auth.inMemoryAuthentication()
+                .withUser("temporalAdmin")
+                .password("admin")
+                .roles("SUPER_ADMIN");
     }
 }

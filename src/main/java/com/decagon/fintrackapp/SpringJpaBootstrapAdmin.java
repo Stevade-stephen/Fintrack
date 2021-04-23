@@ -52,8 +52,8 @@ public class SpringJpaBootstrapAdmin implements ApplicationListener<ContextRefre
             System.err.println("I AM HERE OOO");
             User superAdmin = new User();
             superAdmin.setName("temporalAdmin");
-//            superAdmin.setPassword(passwordEncoder.encode("admin"));
-//            superAdmin.setEmail("temp@Admin");
+            superAdmin.setPassword(passwordEncoder.encode("admin"));
+            superAdmin.setEmail("temp@Admin");
 
             Role role1 = new Role();
             Role role2 = new Role();
@@ -75,8 +75,8 @@ public class SpringJpaBootstrapAdmin implements ApplicationListener<ContextRefre
             roleRepository.save(role4);
             roleRepository.save(role5);
 
-           // superAdmin.setRoles(Set.of(role1, role2, role3));
-//            userRepository.save(superAdmin);
+            superAdmin.setRoles(Set.of(role1, role2, role3));
+            userRepository.save(superAdmin);
 
             Company company = new Company();
             companyRepository.save(company);

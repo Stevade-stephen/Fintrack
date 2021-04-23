@@ -44,10 +44,12 @@ public class RequesterServiceImpl {
                 transactionRequest.getAmount(), transactionRequest.getReceiptUrls(), transactionRequest.getCategory());
 
         transaction.setStatus(EStatus.PENDING);
-        Optional <User>currentAuditor = webSecurityAuditable.getCurrentAuditor();
-        transaction.setRequester(currentAuditor.get());
-        Department department = currentAuditor.get().getDepartment();
-        Company company =  currentAuditor.get().getCompany();
+
+        Optional <String>userName = webSecurityAuditable.getCurrentAuditor();
+        User currentAuditor = userRepository.findByName(userName.get());
+        transaction.setRequester(currentAuditor);
+        Department department = currentAuditor.getDepartment();
+        Company company =  currentAuditor.getCompany();
 
 
         if (transactionRequest.getAmount() <= 10000) {

@@ -8,6 +8,7 @@ import com.decagon.fintrackapp.model.Role;
 import com.decagon.fintrackapp.model.User;
 import com.decagon.fintrackapp.payload.ApiResponse;
 import com.decagon.fintrackapp.payload.JwtAuthenticationResponse;
+import com.decagon.fintrackapp.payload.LoginRequest;
 import com.decagon.fintrackapp.repository.CompanyRepository;
 import com.decagon.fintrackapp.repository.RoleRepository;
 import com.decagon.fintrackapp.repository.UserRepository;
@@ -42,6 +43,7 @@ public class UserServiceImpl {
     public ResponseEntity<?> createUser(String name, String email) {
         Optional<User> oldUser = userRepository.getUserByEmail(email);
         User user = new User();
+        final String jwt;
         if (oldUser.isEmpty()) {
             user.setName(name);
             user.setEmail(email);
@@ -50,9 +52,11 @@ public class UserServiceImpl {
             Optional<Role> role = roleRepository.findByAppUserRole(REQUESTER);
             user.setRoles(Set.of(role.get()));
             userRepository.save(user);
-    }
-    final String jwt = tokenProvider.generateToken(user);
-        System.err.println("errrrrr33");
+            jwt = tokenProvider.generateToken(user);
+        } else {
+            jwt = tokenProvider.generateToken(oldUser.get());
+
+        }
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
     }
 

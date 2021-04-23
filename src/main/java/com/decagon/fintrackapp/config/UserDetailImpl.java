@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
+@Slf4j
 public class UserDetailImpl implements UserDetails {
 
     @Serial
@@ -25,13 +27,19 @@ public class UserDetailImpl implements UserDetails {
 
     private Collection<? extends GrantedAuthority> grantedAuthorities;
 
-    public UserDetailImpl(Long id, String name, String password, List<GrantedAuthority> grantedAuthorities) {
+    public UserDetailImpl(Long id, String username, String password, Collection<? extends GrantedAuthority> grantedAuthorities) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.grantedAuthorities = grantedAuthorities;
     }
 
     public static UserDetails buildUserDetail(User user) {
         List<GrantedAuthority> grantedAuthorities = user.getRoles().stream()
                 .map(userRole -> new SimpleGrantedAuthority(userRole.getAppUserRole().name()))
                 .collect(Collectors.toList());
+        log.info(String.valueOf(grantedAuthorities));
+        log.info(String.valueOf(user));
         return new UserDetailImpl(
                 user.getId(),
                 user.getName(),

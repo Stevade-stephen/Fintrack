@@ -7,6 +7,7 @@ import com.decagon.fintrackapp.serviceImp.requester_service.RequesterServiceImpl
 import com.decagon.fintrackapp.serviceImp.super_admin_service.TransactionServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URISyntaxException;
@@ -26,18 +27,20 @@ public class TransactionController {
         this.requesterService = requesterService;
     }
 
-
+    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     @PostMapping(value = {"/create_transaction"})
     public ResponseEntity<?> createTransaction(@RequestBody TransactionRequest transactionRequest){
         return requesterService.createTransaction(transactionRequest);
     }
 
+    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     @PostMapping(value = "/create_request-Category")
     public ResponseEntity<?> createRequestCategory(@RequestBody CategoryRequest categoryRequest){
 
         return transactionService.addRequestCategory(categoryRequest);
     }
 
+    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     @GetMapping(value = {"/view_transaction_ByCategory/{transactionCategory}"})
     public ResponseEntity<?> viewTransactionByCategory(@PathVariable(value = "transactionCategory") Optional<ECategory> transactionCategory)
                                                       {
@@ -45,6 +48,7 @@ public class TransactionController {
 
     }
 
+    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     @GetMapping(value = {"/view_transaction_ByStatus/{transactionStatus}"})
     public ResponseEntity<?> viewTransactionByStatus(@PathVariable(value = "transactionStatus")Optional<EStatus> transactionStatus
                                                      ){
@@ -52,18 +56,21 @@ public class TransactionController {
 
     }
 
+    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     @GetMapping(value = {"/view_all_transaction"})
     public ResponseEntity<?> viewAllTransaction(){
         return transactionService.viewTransactions( Optional.empty(), Optional.empty(), Optional.empty());
 
     }
 
+    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     @GetMapping(value = {"/view_transaction_byStatus/{transactionCategory}/{transactionStatus}"})
     public ResponseEntity<?> viewTransactionByStatusAndCategory(@PathVariable(value = "transactionCategory") Optional<ECategory> transactionCategory,
                                                                 @PathVariable(value = "transactionStatus")Optional<EStatus> transactionStatus){
         return transactionService.viewTransactions( transactionCategory, transactionStatus, Optional.empty());
     }
 
+    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     @GetMapping(value = {"/view_transaction_byECash/{transactionECashType}"})
     public ResponseEntity<?> viewTransactionByECashType(@PathVariable(value = "transactionECashType")Optional<ECashType> transactionECashType){
         return transactionService.viewTransactions(Optional.empty(), Optional.empty(), transactionECashType);
