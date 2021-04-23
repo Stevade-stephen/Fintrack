@@ -1,5 +1,6 @@
 package com.decagon.fintrackapp;
 
+import com.decagon.fintrackapp.config.WebSecurityAuditable;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;

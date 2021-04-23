@@ -1,6 +1,6 @@
 package com.decagon.fintrackapp.serviceImp;
 
-import com.decagon.fintrackapp.WebSecurityAuditable;
+import com.decagon.fintrackapp.config.WebSecurityAuditable;
 import com.decagon.fintrackapp.exception.AppException;
 import com.decagon.fintrackapp.model.*;
 import com.decagon.fintrackapp.payload.ApiResponse;

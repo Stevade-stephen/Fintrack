@@ -36,7 +36,7 @@ public class DepartmentController {
         this.roleRepository = roleRepository;
     }
 
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+//    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     @PostMapping(value = {"/create_department/{name}"})
     public ResponseEntity<?> createDepartment(@PathVariable(value="name") String name, HttpServletRequest request) {
 //        User user = jwtTokenProvider.resolveUser(request).orElseThrow(() ->
@@ -48,7 +48,7 @@ public class DepartmentController {
 //        else throw new AppException("Access Denied");
     }
 
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+//    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     @PostMapping(value =  {"department/add_member/{departmentId}/{userId}"})
     public ResponseEntity<?> addMember(@PathVariable(value = "departmentId") Long departmentId,
                                        @PathVariable(value = "userId") Long userId){

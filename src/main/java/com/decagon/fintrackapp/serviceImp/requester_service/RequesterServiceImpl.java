@@ -1,7 +1,9 @@
 package com.decagon.fintrackapp.serviceImp.requester_service;
 
 
-import com.decagon.fintrackapp.WebSecurityAuditable;
+
+
+import com.decagon.fintrackapp.config.WebSecurityAuditable;
 import com.decagon.fintrackapp.model.*;
 import com.decagon.fintrackapp.payload.ApiResponse;
 import com.decagon.fintrackapp.payload.TransactionRequest;
@@ -46,7 +48,9 @@ public class RequesterServiceImpl {
         transaction.setStatus(EStatus.PENDING);
 
         Optional <String>userName = webSecurityAuditable.getCurrentAuditor();
+        System.err.println(userName);
         User currentAuditor = userRepository.findByName(userName.get());
+        System.err.println(currentAuditor.getName());
         transaction.setRequester(currentAuditor);
         Department department = currentAuditor.getDepartment();
         Company company =  currentAuditor.getCompany();

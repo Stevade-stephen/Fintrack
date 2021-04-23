@@ -42,7 +42,7 @@ public class UserController {
         return userService.assignRole(roleId, userId);
     }
 
-//    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     @PostMapping(value = {"/remove_roles/{roleId}/{userId}"})
     public ResponseEntity<?> removeRole(@PathVariable(value="roleId") Set<Long> roleId,
                                         @PathVariable(value="userId") Long userId){

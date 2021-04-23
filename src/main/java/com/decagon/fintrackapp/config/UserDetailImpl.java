@@ -1,4 +1,5 @@
 package com.decagon.fintrackapp.config;
+import com.decagon.fintrackapp.model.Department;
 import com.decagon.fintrackapp.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,14 +25,16 @@ public class UserDetailImpl implements UserDetails {
     private Long id;
     private  String username;
     private  String password;
+    private Department department;
 
     private Collection<? extends GrantedAuthority> grantedAuthorities;
 
-    public UserDetailImpl(Long id, String username, String password, Collection<? extends GrantedAuthority> grantedAuthorities) {
+    public UserDetailImpl(Long id, String username, String password, Collection<? extends GrantedAuthority> grantedAuthorities, Department department) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.grantedAuthorities = grantedAuthorities;
+        this.department = department;
     }
 
     public static UserDetails buildUserDetail(User user) {
@@ -44,7 +47,8 @@ public class UserDetailImpl implements UserDetails {
                 user.getId(),
                 user.getName(),
                 user.getPassword(),
-                grantedAuthorities
+                grantedAuthorities,
+                user.getDepartment()
         );
     }
 

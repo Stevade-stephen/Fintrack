@@ -1,7 +1,6 @@
-package com.decagon.fintrackapp;
+package com.decagon.fintrackapp.config;
 
-import com.decagon.fintrackapp.config.UserDetailImpl;
-import com.decagon.fintrackapp.model.User;
+
 import com.decagon.fintrackapp.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +31,17 @@ public class WebSecurityAuditable implements AuditorAware {
             return Optional.empty();
         }
 
-    log.info(authentication.getPrincipal().toString());
+        if(authentication.getPrincipal().toString().startsWith("Name")){
+            System.err.println(authentication.getPrincipal().toString());
+            String [] str = authentication.getPrincipal().toString().split(", ");
+            List<String> list =Arrays.stream(str).filter(x->x.startsWith("name")).collect(Collectors.toList());
+            String userName = list.get(0).split("=")[1];
+            System.err.println(userName);
+
+            return Optional.ofNullable(userName);
+        }
     UserDetailImpl str = (UserDetailImpl) authentication.getPrincipal();
     String userName = str.getUsername();
-
     return Optional.ofNullable(userName);
     }
 }

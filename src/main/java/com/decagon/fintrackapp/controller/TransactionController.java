@@ -27,7 +27,7 @@ public class TransactionController {
         this.requesterService = requesterService;
     }
 
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+//    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
     @PostMapping(value = {"/create_transaction"})
     public ResponseEntity<?> createTransaction(@RequestBody TransactionRequest transactionRequest){
         return requesterService.createTransaction(transactionRequest);

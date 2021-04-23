@@ -53,8 +53,11 @@ public class DepartmentImpl {
 
         if(department.get().getUsers().contains(user.get())) throw new AppException("User already exist");
 
+
         department.get().getUsers().add(user.get());
+        user.get().setDepartment(department.get());
         departmentRepository.save(department.get());
+        userRepository.save(user.get());
         URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/department/{name}")
                 .buildAndExpand(department.get().getName()).toUri();
 
