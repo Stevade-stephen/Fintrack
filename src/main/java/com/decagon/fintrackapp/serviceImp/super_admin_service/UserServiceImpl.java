@@ -73,15 +73,10 @@ public class UserServiceImpl {
 
         role.addAll(user.get().getRoles());
         user.get().setRoles(role);
-        userRepository.save(user.get());
 
         if(role.contains(lineManger)) {
-            System.err.println(user.get());
-            System.err.println(user.get().getName());
-            System.err.println(user.get().getCompany());
-            System.err.println(user.get().getId());
-            System.err.println(user.get().getDepartment());
             user.get().getDepartment().setLineManager(user.get());
+
         }
         if(role.contains(companyCEO)){
             user.get().getCompany().setCompanyCeo(user.get());
@@ -89,6 +84,8 @@ public class UserServiceImpl {
         if(role.contains(financialController)){
             user.get().getCompany().setFinancialController(user.get());
         }
+
+        userRepository.save(user.get());
         URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/users/{username}")
                 .buildAndExpand(user.get().getName()).toUri();
 

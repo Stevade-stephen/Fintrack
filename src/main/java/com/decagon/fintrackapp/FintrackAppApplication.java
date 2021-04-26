@@ -18,6 +18,9 @@ public class FintrackAppApplication {
 
     @Bean
     public AuditorAware <String> auditorAware(){
+        int i = Integer.parseInt("6");
+        int [] a = new int [i];
         return new WebSecurityAuditable();
+
     }
 }

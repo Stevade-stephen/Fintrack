@@ -76,6 +76,13 @@ public class TransactionController {
         return transactionService.viewTransactions(Optional.empty(), Optional.empty(), transactionECashType);
     }
 
+    @PreAuthorize("hasAuthority('REQUESTER')")
+    @PostMapping(value = {"/notify_disbursal/{transactionId}/{userId}"})
+    public ResponseEntity<?> notifyDisbursal(@PathVariable(value = "transactionId") Long transactionId,
+                                             @PathVariable(value = "userId") Long userId){
+        return transactionService.notifyDisbursal(transactionId, userId);
+    }
+
 //    @PostMapping(value =  {"/edit_transaction/{transactionId}"})
 //    public ResponseEntity<?> editTransaction(@PathVariable Long transactionId, @RequestBody TransactionRequest transaction) throws URISyntaxException {
 //

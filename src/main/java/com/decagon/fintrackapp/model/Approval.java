@@ -18,6 +18,7 @@ public class Approval extends Auditable<String>{
     private boolean isApprovedByCEO = false;
     private boolean isApprovedByFinancialController = false;
 
+
     @OneToOne
     private Transaction transaction;
 }

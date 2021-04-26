@@ -130,4 +130,27 @@ public class TransactionServiceImpl {
         return transactions.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity(new ApiResponse(false, "Specified transaction is not found!"),
                 HttpStatus.BAD_REQUEST));
     }
+
+    public ResponseEntity<?> notifyDisbursal(Long transactionId, Long userId){
+        Optional<Transaction> transaction = transactionRepository.findById(transactionId);
+        Long requesterId = transaction.get().getRequester().getId();
+        if(userId.equals(requesterId)){
+            if(transaction.get().getCashType().equals(ECashType.PETTY_CASH)){
+                if(transaction.get().getApproval().isApprovedByLineManager() && transaction.get().getApproval().isApprovedByFinancialController()){
+                    transaction.get().setDisbursed(true);
+                }
+            } else{
+                if(transaction.get().getApproval().isApprovedByLineManager() &&
+                        transaction.get().getApproval().isApprovedByFinancialController()
+                        && transaction.get().getApproval().isApprovedByCEO()){
+                    transaction.get().setDisbursed(true);
+                }
+            }
+            transactionRepository.save(transaction.get());
+            return new ResponseEntity<>(new ApiResponse(true, "Disbursal successfully notified"),
+                    HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new ApiResponse(false, "Unable to set disbursal notification"),
+                HttpStatus.BAD_REQUEST);
+    }
 }

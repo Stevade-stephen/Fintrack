@@ -49,6 +49,8 @@ public class Transaction extends Auditable<String>{
     @OneToOne
     private Approval approval;
 
+    private boolean isDisbursed = false;
+
 
     public Transaction(@NotBlank String title, @NotBlank String description, @NotBlank double amount,
                        @NotBlank String receiptUrls, ECategory category) {

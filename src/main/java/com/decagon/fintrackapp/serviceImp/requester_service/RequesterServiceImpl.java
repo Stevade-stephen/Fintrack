@@ -7,6 +7,7 @@ import com.decagon.fintrackapp.config.WebSecurityAuditable;
 import com.decagon.fintrackapp.model.*;
 import com.decagon.fintrackapp.payload.ApiResponse;
 import com.decagon.fintrackapp.payload.TransactionRequest;
+import com.decagon.fintrackapp.repository.ApprovalRepository;
 import com.decagon.fintrackapp.repository.DepartmentRepository;
 import com.decagon.fintrackapp.repository.TransactionRepository;
 import com.decagon.fintrackapp.repository.UserRepository;
@@ -28,15 +29,18 @@ public class RequesterServiceImpl {
     private final UserRepository userRepository;
     private final TransactionRepository transactionRepository;
     private final DepartmentRepository departmentRepository;
+    private final ApprovalRepository approvalRepository;
+
 
     @Autowired
     public RequesterServiceImpl(WebSecurityAuditable webSecurityAuditable, UserRepository userRepository,
                                 TransactionRepository transactionRepository,
-                                DepartmentRepository departmentRepository) {
+                                DepartmentRepository departmentRepository, ApprovalRepository approvalRepository) {
         this.webSecurityAuditable = webSecurityAuditable;
         this.userRepository = userRepository;
         this.transactionRepository = transactionRepository;
         this.departmentRepository = departmentRepository;
+        this.approvalRepository = approvalRepository;
     }
 
 
@@ -47,17 +51,23 @@ public class RequesterServiceImpl {
 
         transaction.setStatus(EStatus.PENDING);
 
+
+
+
         Optional <String>userName = webSecurityAuditable.getCurrentAuditor();
         System.err.println(userName);
         User currentAuditor = userRepository.findByName(userName.get());
         System.err.println(currentAuditor.getName());
         transaction.setRequester(currentAuditor);
         Department department = currentAuditor.getDepartment();
+        System.err.println(department.getName());
+
         Company company =  currentAuditor.getCompany();
 
 
         if (transactionRequest.getAmount() <= 10000) {
             transaction.setCashType(PETTY_CASH);
+            System.err.println(List.of(department.getLineManager().getName(), company.getFinancialController().getName()));
             transaction.setApprovalList(List.of(department.getLineManager(), company.getFinancialController()));
 
 
@@ -68,10 +78,22 @@ public class RequesterServiceImpl {
 //            requestCategory.setTransactionType(transactionType);
 
 
-        Transaction result = transactionRepository.save(transaction);
+
+        Approval  result1 = approvalRepository.save(new Approval());
+        transaction.setApproval(result1);
+
+        Transaction result2 = transactionRepository.save(transaction);
+        result1.setTransaction(result2);
+        approvalRepository.save(result1);
+
+        User user = transaction.getApprovalList().get(0);
+        User oldUser = userRepository.findById(user.getId()).get();
+        oldUser.getApprovals().add(result1);
+        userRepository.save(oldUser);
+
 
         URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/transaction/{title}")
-                .buildAndExpand(result.getTitle()).toUri();
+                .buildAndExpand(result2.getTitle()).toUri();
 
         return ResponseEntity.created(location).body(new ApiResponse(
                 true, "transaction added successfully"));

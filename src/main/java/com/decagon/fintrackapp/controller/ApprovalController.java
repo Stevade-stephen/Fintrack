@@ -20,7 +20,7 @@ public class ApprovalController {
         this.approvalService = approvalService;
     }
 
-    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @PreAuthorize("hasAnyAuthority('LINE_MANAGER', 'FINANCIAL_CONTROLLER', 'CEO')")
     @PostMapping("/approve_transaction/{id}")
     public ResponseEntity<?> approveTransaction (@PathVariable Long id){
         return approvalService.approveTransaction(id);
