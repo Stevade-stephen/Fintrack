@@ -49,7 +49,7 @@ public class DepartmentController {
     }
 
 //    @PreAuthorize("hasAuthority('SUPER_ADMIN')")
-    @PostMapping(value =  {"department/add_member/{departmentId}/{userId}"})
+    @PostMapping(value =  {"/add_member/{departmentId}/{userId}"})
     public ResponseEntity<?> addMember(@PathVariable(value = "departmentId") Long departmentId,
                                        @PathVariable(value = "userId") Long userId){
         return departmentService.addMember(departmentId,userId);

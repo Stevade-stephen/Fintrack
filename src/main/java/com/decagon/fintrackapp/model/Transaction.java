@@ -26,7 +26,7 @@ public class Transaction extends Auditable<String>{
     @NotBlank
     @Column(name = ("receipt_urls"))
     @Lob
-    private String receiptUrls;
+    private String receiptUrls = null;
     @NotBlank
     @CreationTimestamp
     private Instant closedAt;

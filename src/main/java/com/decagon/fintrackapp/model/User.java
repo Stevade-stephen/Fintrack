@@ -33,7 +33,7 @@ public class User extends Auditable<String>{
     private Department department;
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles = new HashSet<>();
-    @OneToMany
+    @ManyToMany
     private  List<Approval> approvals;
 
     @ManyToOne

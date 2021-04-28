@@ -2,17 +2,16 @@ package com.decagon.fintrackapp.serviceImp.super_admin_service;
 
 import com.decagon.fintrackapp.config.JwtTokenProvider;
 import com.decagon.fintrackapp.exception.AppException;
-import com.decagon.fintrackapp.model.Company;
-import com.decagon.fintrackapp.model.ERole;
-import com.decagon.fintrackapp.model.Role;
-import com.decagon.fintrackapp.model.User;
+import com.decagon.fintrackapp.model.*;
 import com.decagon.fintrackapp.payload.ApiResponse;
 import com.decagon.fintrackapp.payload.JwtAuthenticationResponse;
 import com.decagon.fintrackapp.payload.LoginRequest;
 import com.decagon.fintrackapp.repository.CompanyRepository;
 import com.decagon.fintrackapp.repository.RoleRepository;
+import com.decagon.fintrackapp.repository.TransactionRepository;
 import com.decagon.fintrackapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -37,6 +36,8 @@ public class UserServiceImpl {
     CompanyRepository companyRepository;
     @Autowired
     JwtTokenProvider tokenProvider;
+    @Autowired
+    TransactionRepository transactionRepository;
 
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -109,4 +110,41 @@ public class UserServiceImpl {
 
     }
 
+    public ResponseEntity<?> updateTransactionStatus(Long transactionId){
+        Optional<Transaction> transaction = transactionRepository.findById(transactionId);
+        if(transaction.get().isDisbursed()){
+            transaction.get().setStatus(EStatus.DISBURSED);
+
+            return new ResponseEntity<>(new ApiResponse(true, "Status set to Disbursed"),
+                    HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new ApiResponse(false, "Unable to set Status"),
+                HttpStatus.BAD_REQUEST);
+    }
+
+    public ResponseEntity<?> uploadReceipt(Long transactionId, Long userId, String receiptUrl) {
+        Transaction transaction = transactionRepository.findById(transactionId).get();
+        Long requesterId = transaction.getRequester().getId();
+        if(requesterId.equals(userId)){
+            if(transaction.isDisbursed()) {
+                transaction.setReceiptUrls(receiptUrl);
+                transactionRepository.save(transaction);
+                return new ResponseEntity<>(new ApiResponse(true, "Receipt uploaded successfully"),
+                        HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>(new ApiResponse(false, "Could not upload receipt"),
+                HttpStatus.BAD_REQUEST);
+    }
+
+    public ResponseEntity<?> closeTransaction(Long transactionId) {
+        Transaction transaction = transactionRepository.findById(transactionId).get();
+        if(transaction.getReceiptUrls() != null){
+            transaction.setStatus(EStatus.CLOSED);
+            return new ResponseEntity<>(new ApiResponse(true, "Transaction Closed successfully"),
+                    HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new ApiResponse(false, "Could not close transaction"),
+                HttpStatus.BAD_REQUEST);
+    }
 }

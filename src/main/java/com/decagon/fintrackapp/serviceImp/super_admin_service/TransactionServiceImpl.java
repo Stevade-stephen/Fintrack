@@ -138,15 +138,16 @@ public class TransactionServiceImpl {
             if(transaction.get().getCashType().equals(ECashType.PETTY_CASH)){
                 if(transaction.get().getApproval().isApprovedByLineManager() && transaction.get().getApproval().isApprovedByFinancialController()){
                     transaction.get().setDisbursed(true);
+                    transactionRepository.save(transaction.get());
                 }
             } else{
                 if(transaction.get().getApproval().isApprovedByLineManager() &&
                         transaction.get().getApproval().isApprovedByFinancialController()
                         && transaction.get().getApproval().isApprovedByCEO()){
                     transaction.get().setDisbursed(true);
+                    transactionRepository.save(transaction.get());
                 }
             }
-            transactionRepository.save(transaction.get());
             return new ResponseEntity<>(new ApiResponse(true, "Disbursal successfully notified"),
                     HttpStatus.OK);
         }

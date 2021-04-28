@@ -66,4 +66,22 @@ public class UserController {
                 new ApiResponse(false, "Who the hell are you"),
                 HttpStatus.BAD_REQUEST);
     }
+
+    @PostMapping("/set_transaction_status/{transactionId}")
+    public ResponseEntity<?> setDisburseTransaction(@PathVariable(name = "transactionId") Long transactionId){
+        return userService.updateTransactionStatus(transactionId);
+    }
+
+    @PostMapping("/user_upload_receipt/{transactionId}/{userId}")
+    public ResponseEntity<?> userUploadReceipt(@PathVariable(name = "transactionId") Long transactionId,
+                                               @PathVariable(name = "userId") Long userId,
+                                               @RequestBody String receiptUrl){
+        return userService.uploadReceipt(transactionId, userId, receiptUrl);
+    }
+
+    @PostMapping("/close_transaction/{transactionId}")
+    public ResponseEntity<?> userUploadReceipt(@PathVariable(name = "transactionId") Long transactionId){
+        return userService.closeTransaction(transactionId);
+    }
+
 }

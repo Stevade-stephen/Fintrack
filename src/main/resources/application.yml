@@ -29,7 +29,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/fintrack?serverTimezone=UTC
     username: root
-    password: enoch@1992
+    password: remi4god
   jpa:
     properties:
       hibernate:

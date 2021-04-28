@@ -38,6 +38,7 @@ public class ApprovalServiceImpl {
                 new AppException("No transaction Found with id " + transactionId));
         Optional<String> str = webSecurityAuditable.getCurrentAuditor();
         User currentAuditor = userRepository.findByName(str.get());
+        System.err.println(currentAuditor.getName());
 
 
 
@@ -54,8 +55,6 @@ public class ApprovalServiceImpl {
         if (currentAuditor.equals(department.getLineManager())) {
 
             approval.setApprovedByLineManager(true);
-
-            transactionRepository.save(transaction);
             approvalRepository.save(approval);
 
             User user = transaction.getApprovalList().get(1);
@@ -63,6 +62,7 @@ public class ApprovalServiceImpl {
             oldUser.getApprovals().add(approval);
             userRepository.save(oldUser);
 
+            transactionRepository.save(transaction);
 
             //TODO notification should be sent to financial controller here
 
@@ -71,9 +71,14 @@ public class ApprovalServiceImpl {
         if (approval.isApprovedByLineManager()) {
             if (currentAuditor.equals(company.getFinancialController())) {
                 approval.setApprovedByFinancialController(true);
+                approvalRepository.save(approval);
+                transactionRepository.save(transaction);
 
                 if (transaction.getCashType().equals(CASH_FOR_UPLOAD)) {
-                    //TODO notification should be sent to CEO here
+                    User user = transaction.getApprovalList().get(2);
+                    User oldUser = userRepository.findById(user.getId()).get();
+                    oldUser.getApprovals().add(approval);
+                    userRepository.save(oldUser);
                 }
                 return new ResponseEntity<>(true, HttpStatus.OK);
             }
@@ -81,6 +86,8 @@ public class ApprovalServiceImpl {
 
                 if (transaction.getCashType().equals(CASH_FOR_UPLOAD) && currentAuditor.equals(company.getCompanyCeo())) {
                     approval.setApprovedByCEO(true);
+                    approvalRepository.save(approval);
+                    transactionRepository.save(transaction);
                     return new ResponseEntity<>(true, HttpStatus.OK);
                 }
             }
