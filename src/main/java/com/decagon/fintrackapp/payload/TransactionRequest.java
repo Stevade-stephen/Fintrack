@@ -20,10 +20,7 @@ public class TransactionRequest {
     private String description;
     @NotBlank
     private double amount;
-    @NotBlank
-    @Column(name = ("receipt_urls"))
-    @Lob
-    private String receiptUrls;
+
     @NotBlank
     @Enumerated(EnumType.STRING)
     private ECategory category;

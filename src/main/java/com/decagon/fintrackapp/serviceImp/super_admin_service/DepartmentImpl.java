@@ -66,4 +66,23 @@ public class DepartmentImpl {
     }
 
 
+    public ResponseEntity<?> removeMember(Long departmentId, Long userId) {
+        Optional<Department> department = departmentRepository.findById(departmentId);
+
+        if(department.isEmpty())throw new AppException("There is no department with id " + departmentId);
+
+        Optional<User> user = userRepository.findById(userId);
+        if(user.isEmpty()) throw new AppException("There is no user with  id " + userId);
+
+        if(!department.get().getUsers().contains(user.get())) throw new AppException("User not in this department");
+
+        department.get().getUsers().remove(user.get());
+        user.get().setDepartment(null);
+        departmentRepository.save(department.get());
+        userRepository.save(user.get());
+        URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/department/{name}")
+                .buildAndExpand(department.get().getName()).toUri();
+        return ResponseEntity.created(location).body(new ApiResponse(
+                true, "Member successfully removed from department"));
+    }
 }

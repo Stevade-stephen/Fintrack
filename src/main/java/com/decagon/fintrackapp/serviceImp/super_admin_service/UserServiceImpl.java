@@ -6,10 +6,7 @@ import com.decagon.fintrackapp.model.*;
 import com.decagon.fintrackapp.payload.ApiResponse;
 import com.decagon.fintrackapp.payload.JwtAuthenticationResponse;
 import com.decagon.fintrackapp.payload.LoginRequest;
-import com.decagon.fintrackapp.repository.CompanyRepository;
-import com.decagon.fintrackapp.repository.RoleRepository;
-import com.decagon.fintrackapp.repository.TransactionRepository;
-import com.decagon.fintrackapp.repository.UserRepository;
+import com.decagon.fintrackapp.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +35,8 @@ public class UserServiceImpl {
     JwtTokenProvider tokenProvider;
     @Autowired
     TransactionRepository transactionRepository;
+    @Autowired
+    DepartmentRepository departmentRepository;
 
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -98,22 +97,41 @@ public class UserServiceImpl {
     public ResponseEntity<?> removeUserRole(Set<Long> roleId, Long userId) {
         Optional<User> user = userRepository.findById(userId);
         if(user.isEmpty()) throw new AppException("User does not exist");
-        Set<Role> role = roleId.stream()
+
+
+        if(user.get().getDepartment() == null) {
+            Set<Role> role = roleId.stream()
+                    .map(id ->roleRepository.findById(id).get()).collect(Collectors.toSet());
+            user.get().getRoles().removeAll(role);
+            userRepository.save(user.get());
+
+        } else {
+            Optional<Department> department = departmentRepository.findById(user.get().getDepartment().getId());
+            Set<Role> role = roleId.stream()
                 .map(id ->roleRepository.findById(id).get()).collect(Collectors.toSet());
-        user.get().getRoles().removeAll(role);
-        userRepository.save(user.get());
+            user.get().getRoles().removeAll(role);
+
+            userRepository.save(user.get());
+            Role thisRole = new Role(LINE_MANAGER);
+
+            if(role.contains(thisRole))
+                department.get().setLineManager(null);
+            departmentRepository.save(department.get());
+        }
+
+
         URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/users/{username}")
                 .buildAndExpand(user.get().getName()).toUri();
-
         return ResponseEntity.created(location).body(new ApiResponse(
                 true, "Role(s) removed successfully"));
 
     }
 
     public ResponseEntity<?> updateTransactionStatus(Long transactionId){
-        Optional<Transaction> transaction = transactionRepository.findById(transactionId);
-        if(transaction.get().isDisbursed()){
-            transaction.get().setStatus(EStatus.DISBURSED);
+        Transaction transaction = transactionRepository.findById(transactionId).get();
+        if(transaction.isDisbursed()){
+            transaction.setStatus(EStatus.DISBURSED);
+           transactionRepository.save(transaction);
 
             return new ResponseEntity<>(new ApiResponse(true, "Status set to Disbursed"),
                     HttpStatus.OK);
@@ -141,6 +159,7 @@ public class UserServiceImpl {
         Transaction transaction = transactionRepository.findById(transactionId).get();
         if(transaction.getReceiptUrls() != null){
             transaction.setStatus(EStatus.CLOSED);
+            transactionRepository.save(transaction);
             return new ResponseEntity<>(new ApiResponse(true, "Transaction Closed successfully"),
                     HttpStatus.OK);
         }

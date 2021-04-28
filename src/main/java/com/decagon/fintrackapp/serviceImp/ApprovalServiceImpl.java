@@ -54,23 +54,28 @@ public class ApprovalServiceImpl {
 
         if (currentAuditor.equals(department.getLineManager())) {
 
-            approval.setApprovedByLineManager(true);
+            approval.setIsApprovedByLineManager(EApproval.APPROVED);
             approvalRepository.save(approval);
 
             User user = transaction.getApprovalList().get(1);
             User oldUser = userRepository.findById(user.getId()).get();
             oldUser.getApprovals().add(approval);
+            System.err.println("Am here now");
             userRepository.save(oldUser);
 
             transactionRepository.save(transaction);
+
+            System.err.println("Am here then");
+            transactionRepository.save(transaction);
+            System.err.println("Am not here");
 
             //TODO notification should be sent to financial controller here
 
             return new ResponseEntity<>(true, HttpStatus.OK);
         }
-        if (approval.isApprovedByLineManager()) {
+        if (approval.getIsApprovedByLineManager().equals(EApproval.APPROVED)) {
             if (currentAuditor.equals(company.getFinancialController())) {
-                approval.setApprovedByFinancialController(true);
+                approval.setIsApprovedByFinancialController(EApproval.APPROVED);
                 approvalRepository.save(approval);
                 transactionRepository.save(transaction);
 
@@ -82,10 +87,10 @@ public class ApprovalServiceImpl {
                 }
                 return new ResponseEntity<>(true, HttpStatus.OK);
             }
-            if (approval.isApprovedByFinancialController()) {
+            if (approval.getIsApprovedByFinancialController().equals(EApproval.APPROVED)) {
 
                 if (transaction.getCashType().equals(CASH_FOR_UPLOAD) && currentAuditor.equals(company.getCompanyCeo())) {
-                    approval.setApprovedByCEO(true);
+                    approval.setIsApprovedByCEO(EApproval.APPROVED);
                     approvalRepository.save(approval);
                     transactionRepository.save(transaction);
                     return new ResponseEntity<>(true, HttpStatus.OK);
@@ -99,4 +104,57 @@ public class ApprovalServiceImpl {
 
     }
 
+    public ResponseEntity<?> declineTransaction(Long id) {
+        Transaction transaction = transactionRepository.findById(id).orElseThrow(() ->
+                new AppException("No transaction Found with id " + id));
+        Optional currentAuditor1 = webSecurityAuditable.getCurrentAuditor();
+        User currentAuditor = userRepository.findByName(currentAuditor1.get().toString());
+
+
+//        if (!transaction.getApprovalList().contains(currentAuditor)) {
+//            throw new AppException("Not authorized.");
+//        }
+
+        User requester = transaction.getRequester();
+        Department department = requester.getDepartment();
+        Company company = requester.getCompany();
+        Approval approval = transaction.getApproval();
+
+        if (currentAuditor.equals(department.getLineManager())) {
+
+            approval.setIsApprovedByLineManager(EApproval.DECLINED);
+            approvalRepository.save(approval);
+            transaction.setStatus(EStatus.CLOSED);
+            transactionRepository.save(transaction);
+
+            //TODO notification should be sent to financial controller here
+
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        }
+
+        if (approval.getIsApprovedByLineManager().equals(EApproval.APPROVED)) {
+            if (currentAuditor.equals(company.getFinancialController())) {
+                approval.setIsApprovedByFinancialController(EApproval.DECLINED);
+                approvalRepository.save(approval);
+                transaction.setStatus(EStatus.CLOSED);
+                transactionRepository.save(transaction);
+
+                return new ResponseEntity<>(true, HttpStatus.OK);
+            }
+
+            if (approval.getIsApprovedByFinancialController().equals(EApproval.APPROVED)) {
+                if (transaction.getCashType().equals(CASH_FOR_UPLOAD) && currentAuditor.equals(company.getCompanyCeo())) {
+                    approval.setIsApprovedByCEO(EApproval.DECLINED);
+                    approvalRepository.save(approval);
+                    transaction.setStatus(EStatus.CLOSED);
+                    transactionRepository.save(transaction);
+                    return new ResponseEntity<>(true, HttpStatus.OK);
+                }
+            }
+
+        }
+        return new ResponseEntity<>(new ApiResponse(false, "Transaction Category not found!"),
+                HttpStatus.BAD_REQUEST);
+
+    }
 }

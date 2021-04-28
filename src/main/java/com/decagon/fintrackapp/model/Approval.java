@@ -3,10 +3,7 @@ package com.decagon.fintrackapp.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -14,9 +11,12 @@ import javax.persistence.Table;
 @Entity
 public class Approval extends Auditable<String>{
     private String status;
-    private boolean isApprovedByLineManager;
-    private boolean isApprovedByCEO;
-    private boolean isApprovedByFinancialController;
+    @Enumerated(EnumType.STRING)
+    private EApproval isApprovedByLineManager;
+    @Enumerated(EnumType.STRING)
+    private EApproval isApprovedByCEO;
+    @Enumerated(EnumType.STRING)
+    private EApproval isApprovedByFinancialController;
 
 
     @OneToOne

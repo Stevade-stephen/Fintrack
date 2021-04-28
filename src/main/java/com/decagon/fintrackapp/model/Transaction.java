@@ -53,11 +53,10 @@ public class Transaction extends Auditable<String>{
 
 
     public Transaction(@NotBlank String title, @NotBlank String description, @NotBlank double amount,
-                       @NotBlank String receiptUrls, ECategory category) {
+                        ECategory category) {
         this.title = title;
         this.description = description;
         this.amount = amount;
-        this.receiptUrls = receiptUrls;
         this.category = category;
 
     }

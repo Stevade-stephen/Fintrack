@@ -136,14 +136,15 @@ public class TransactionServiceImpl {
         Long requesterId = transaction.get().getRequester().getId();
         if(userId.equals(requesterId)){
             if(transaction.get().getCashType().equals(ECashType.PETTY_CASH)){
-                if(transaction.get().getApproval().isApprovedByLineManager() && transaction.get().getApproval().isApprovedByFinancialController()){
+                if(transaction.get().getApproval().getIsApprovedByLineManager().equals(EApproval.APPROVED)
+                        && transaction.get().getApproval().getIsApprovedByFinancialController().equals(EApproval.APPROVED)){
                     transaction.get().setDisbursed(true);
                     transactionRepository.save(transaction.get());
                 }
             } else{
-                if(transaction.get().getApproval().isApprovedByLineManager() &&
-                        transaction.get().getApproval().isApprovedByFinancialController()
-                        && transaction.get().getApproval().isApprovedByCEO()){
+                if(transaction.get().getApproval().getIsApprovedByLineManager().equals(EApproval.APPROVED) &&
+                        transaction.get().getApproval().getIsApprovedByFinancialController().equals(EApproval.APPROVED)
+                        && transaction.get().getApproval().getIsApprovedByCEO().equals(EApproval.APPROVED)){
                     transaction.get().setDisbursed(true);
                     transactionRepository.save(transaction.get());
                 }

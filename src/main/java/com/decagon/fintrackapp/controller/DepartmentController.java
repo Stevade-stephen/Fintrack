@@ -55,4 +55,10 @@ public class DepartmentController {
         return departmentService.addMember(departmentId,userId);
     }
 
+    @PostMapping(value =  {"/remove_member_from_department/{departmentId}/{userId}"})
+    public ResponseEntity<?> removeMember(@PathVariable(value = "departmentId") Long departmentId,
+                                          @PathVariable(value = "userId") Long userId){
+        return departmentService.removeMember(departmentId,userId);
+    }
+
 }

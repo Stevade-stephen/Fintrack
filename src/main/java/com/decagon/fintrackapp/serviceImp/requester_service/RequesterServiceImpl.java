@@ -47,9 +47,10 @@ public class RequesterServiceImpl {
     @SuppressWarnings({"unchecked", "rawtypes"})
     public ResponseEntity<?> createTransaction(TransactionRequest transactionRequest) {
         Transaction transaction = new Transaction(transactionRequest.getTitle(), transactionRequest.getDescription(),
-                transactionRequest.getAmount(), transactionRequest.getReceiptUrls(), transactionRequest.getCategory());
+                transactionRequest.getAmount(), transactionRequest.getCategory());
 
         transaction.setStatus(EStatus.PENDING);
+
 
 
 
@@ -63,24 +64,29 @@ public class RequesterServiceImpl {
         System.err.println(department.getName());
 
         Company company =  currentAuditor.getCompany();
-
+        Approval  result1 = approvalRepository.save(new Approval());
+        transaction.setApproval(result1);
 
         if (transactionRequest.getAmount() <= 10000) {
             transaction.setCashType(PETTY_CASH);
             System.err.println(List.of(department.getLineManager().getName(), company.getFinancialController().getName()));
             transaction.setApprovalList(List.of(department.getLineManager(), company.getFinancialController()));
+            transaction.getApproval().setIsApprovedByLineManager(EApproval.PENDING);
+            transaction.getApproval().setIsApprovedByFinancialController(EApproval.PENDING);
 
 
         } else {
             transaction.setCashType(CASH_FOR_UPLOAD);
             transaction.setApprovalList(List.of(department.getLineManager(), company.getFinancialController(), company.getCompanyCeo()));
+            transaction.getApproval().setIsApprovedByLineManager(EApproval.PENDING);
+            transaction.getApproval().setIsApprovedByFinancialController(EApproval.PENDING);
+            transaction.getApproval().setIsApprovedByCEO(EApproval.PENDING);
         }
 //            requestCategory.setTransactionType(transactionType);
 
 
 
-        Approval  result1 = approvalRepository.save(new Approval());
-        transaction.setApproval(result1);
+
 
         Transaction result2 = transactionRepository.save(transaction);
         result1.setTransaction(result2);
