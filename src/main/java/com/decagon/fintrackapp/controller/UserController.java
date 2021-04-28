@@ -80,7 +80,7 @@ public class UserController {
     }
 
     @PostMapping("/close_transaction/{transactionId}")
-    public ResponseEntity<?> userUploadReceipt(@PathVariable(name = "transactionId") Long transactionId){
+    public ResponseEntity<?> closeTransaction(@PathVariable(name = "transactionId") Long transactionId){
         return userService.closeTransaction(transactionId);
     }
 
